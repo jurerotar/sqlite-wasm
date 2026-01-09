@@ -4,16 +4,28 @@ on:
   workflow_dispatch:
     inputs:
       sqlite_ref:
-        description: 'SQLite reference (tag, branch, or commit)'
+        description: 'SQLite reference (tag, branch, or commit, or "latest")'
         required: true
-        default: 'master'
+        default: 'latest'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: Resolve SQLite reference
+        id: resolve-ref
+        run: |
+          SQLITE_REF="${{ github.event.inputs.sqlite_ref }}"
+          if [ "$SQLITE_REF" = "latest" ]; then
+            echo "Fetching latest tag..."
+            LATEST_TAG=$(git ls-remote --tags --sort="v:refname" https://github.com/sqlite/sqlite.git "refs/tags/version-*" | tail -n 1 | cut -f 2 | sed 's/refs\/tags\///')
+            echo "Latest tag found: $LATEST_TAG"
+            SQLITE_REF="$LATEST_TAG"
+          fi
+          echo "sqlite_ref=$SQLITE_REF" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -26,7 +38,7 @@ jobs:
         run: |
           mkdir -p out src/bin
           docker run --rm \
-            -e SQLITE_REF="${{ github.event.inputs.sqlite_ref }}" \
+            -e SQLITE_REF="${{ steps.resolve-ref.outputs.sqlite_ref }}" \
             -e BUILD_THREADS=$(nproc) \
             -e HOST_UID="$(id -u)" \
             -e HOST_GID="$(id -g)" \
@@ -53,11 +65,15 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Update SQLite WASM binaries to ${{ github.event.inputs.sqlite_ref }}"
-          title: "Update SQLite WASM binaries to ${{ github.event.inputs.sqlite_ref }}"
+          commit-message:
+            'chore: update SQLite WASM binaries from ${{
+            steps.resolve-ref.outputs.sqlite_ref }}'
+          title:
+            'chore: update SQLite WASM binaries from ${{
+            steps.resolve-ref.outputs.sqlite_ref }}'
           body: |
-            This PR updates the SQLite WASM binaries in `src/bin` by building them from SQLite reference `${{ github.event.inputs.sqlite_ref }}`.
-            
+            This PR updates the SQLite WASM binaries in `src/bin` by building them from SQLite release `${{ steps.resolve-ref.outputs.sqlite_ref }}`.
+
             Triggered by manual workflow dispatch.
           branch: update-sqlite-wasm
           base: main

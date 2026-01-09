@@ -223,34 +223,16 @@ for this package.
 
 (These steps can only be executed by maintainers.)
 
-### Using Docker (Recommended)
+1. Manually trigger the
+   [GitHub Actions workflow](https://github.com/sqlite/sqlite-wasm/actions/workflows/build-wasm.yml).
+   By default, it uses the latest SQLite tag. This pull request will contain the
+   latest `sqlite3.wasm` and related bindings.
 
-You can build the SQLite Wasm binaries using Docker. This ensures a consistent build environment.
-
-1.  Build the Docker image:
-    ```bash
-    docker build -t sqlite-wasm-builder .
-    ```
-2.  Run the build:
-    ```bash
-    docker run --rm \
-      -e SQLITE_REF="main" \
-      -v "$(pwd)/out":/out \
-      -v "$(pwd)/src/bin":/src/bin \
-      sqlite-wasm-builder build
-    ```
-    **Note:** The `-v` flags are crucial. They mount your local directories into the container so that the build artifacts are saved back to your host machine.
-
-### Manual build
-
-1. Update the version number in `package.json` reflecting the current
+2. Once the above pull request is validated and merged, update the version
+   number in `package.json`, reflecting the current
    [SQLite version number](https://sqlite.org/download.html) and add a build
    identifier suffix like `-build1`. The complete version number should read
    something like `3.41.2-build1`.
-1. Run `npm run build` to build the ES Module. This downloads the latest SQLite
-   Wasm binary and builds the ES Module.
-1. Run `npm run deploy` to commit the changes, push to GitHub, and publish the
-   new version to npm.
 
 ## License
 

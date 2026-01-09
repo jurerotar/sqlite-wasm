@@ -25,7 +25,7 @@ RUN apt-get update \
 RUN mkdir -p /build /out /src/bin /work
 
 # copy helper script
-COPY build-sqlite3-wasm.sh /usr/local/bin/build-sqlite3-wasm.sh
+COPY scripts/build-sqlite3-wasm.sh /usr/local/bin/build-sqlite3-wasm.sh
 RUN chmod +x /usr/local/bin/build-sqlite3-wasm.sh
 
 # expose env defaults (can be overridden at runtime)
