@@ -28,12 +28,6 @@ RUN mkdir -p /build /out /src/bin /work
 COPY scripts/build-sqlite3-wasm.sh /usr/local/bin/build-sqlite3-wasm.sh
 RUN chmod +x /usr/local/bin/build-sqlite3-wasm.sh
 
-# expose env defaults (can be overridden at runtime)
-ENV SQLITE_REPO="https://github.com/sqlite/sqlite.git" \
-    SQLITE_REF="master" \
-    BUILD_THREADS=4 \
-    WORKDIR=/build/sqlite-src
-
 WORKDIR /work
 
 ENTRYPOINT ["/usr/local/bin/build-sqlite3-wasm.sh"]

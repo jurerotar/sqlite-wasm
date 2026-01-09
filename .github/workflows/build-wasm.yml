@@ -39,7 +39,6 @@ jobs:
           mkdir -p out src/bin
           docker run --rm \
             -e SQLITE_REF="${{ steps.resolve-ref.outputs.sqlite_ref }}" \
-            -e BUILD_THREADS=$(nproc) \
             -e HOST_UID="$(id -u)" \
             -e HOST_GID="$(id -g)" \
             -v "$(pwd)/out":/out \
@@ -75,6 +74,6 @@ jobs:
             This PR updates the SQLite WASM binaries in `src/bin` by building them from SQLite release `${{ steps.resolve-ref.outputs.sqlite_ref }}`.
 
             Triggered by manual workflow dispatch.
-          branch: update-sqlite-wasm
+          branch: update-sqlite-wasm-${{ steps.resolve-ref.outputs.sqlite_ref }}
           base: main
           delete-branch: true
