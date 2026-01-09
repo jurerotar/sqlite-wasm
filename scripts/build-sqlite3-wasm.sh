@@ -13,40 +13,8 @@ SRC_DIR="${WORKDIR:-/build/sqlite-src}"
 HOST_UID="${HOST_UID:-}"
 HOST_GID="${HOST_GID:-}"
 
-# Ensure out exists and is writable
-mkdir -p "$OUT_DIR"
-mkdir -p /src/bin
-
-# Check if volumes are mounted
-check_mounts() {
-  if ! mountpoint -q "$OUT_DIR" 2>/dev/null; then
-    # Fallback check using device IDs if mountpoint command is not available or fails
-    root_dev=$(stat -c %d /)
-    out_dev=$(stat -c %d "$OUT_DIR")
-    if [ "$root_dev" = "$out_dev" ]; then
-      log "WARNING: $OUT_DIR does not appear to be a volume mount. Files will be lost when the container exits."
-    fi
-  fi
-  if ! mountpoint -q /src/bin 2>/dev/null; then
-    root_dev=$(stat -c %d /)
-    bin_dev=$(stat -c %d /src/bin)
-    if [ "$root_dev" = "$bin_dev" ]; then
-      log "WARNING: /src/bin does not appear to be a volume mount. Files will be lost when the container exits."
-    fi
-  fi
-}
-
 # Helper: log
 log() { printf '\033[1;34m[build]\033[0m %s\n' "$*"; }
-
-# Handle ownership fixup on exit
-cleanup() {
-  if [ -n "$HOST_UID" ] && [ -n "$HOST_GID" ]; then
-    log "Fixing ownership for /out and /src/bin to $HOST_UID:$HOST_GID"
-    chown -R "$HOST_UID:$HOST_GID" "$OUT_DIR" /src/bin
-  fi
-}
-trap cleanup EXIT
 
 if [ "${1:-}" = "shell" ]; then
   exec /bin/bash
@@ -58,7 +26,6 @@ if [ "${1:-}" != "build" ]; then
 fi
 
 log "Starting sqlite build"
-check_mounts
 log "Repo: $SQLITE_REPO"
 log "Ref:  $SQLITE_REF"
 log "Threads: $BUILD_THREADS"
@@ -125,8 +92,8 @@ chmod a+r "$OUT_DIR/npm-bundle.zip"
 
 # extract into /src/bin (normalize single top-level dir)
 log "Extracting npm-bundle.zip into /src/bin"
-# Clear existing contents to ensure a clean overwrite
-rm -rf /src/bin/*
+# Clear existing contents to ensure a clean overwrite, but don't fail if it fails
+rm -rf /src/bin/* || log "Warning: failed to clear /src/bin/*, proceeding with overwrite"
 mkdir -p /src/bin
 unzip -q -o "$OUT_DIR/npm-bundle.zip" -d /src/bin
 rm -f "$OUT_DIR/npm-bundle.zip"
