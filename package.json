@@ -17,7 +17,7 @@
   "node": "node.mjs",
   "type": "module",
   "files": [
-    "index.d.ts",
+    "src/index.d.ts",
     "index.mjs",
     "node.mjs",
     "sqlite-wasm/"
@@ -39,6 +39,7 @@
     "check-types": "tsc",
     "clean": "shx rm -rf sqlite-wasm",
     "build": "npm run clean && node bin/index.js",
+    "build:wasm": "docker build -t sqlite-wasm-builder . && docker run --rm -v \"$(pwd)/out\":/out -v \"$(pwd)/src/bin\":/src/bin sqlite-wasm-builder build",
     "start": "npx http-server --coop",
     "start:node": "cd demo && node node.mjs",
     "fix": "npx prettier . --write",

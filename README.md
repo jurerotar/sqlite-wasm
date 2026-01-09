@@ -223,6 +223,26 @@ for this package.
 
 (These steps can only be executed by maintainers.)
 
+### Using Docker (Recommended)
+
+You can build the SQLite Wasm binaries using Docker. This ensures a consistent build environment.
+
+1.  Build the Docker image:
+    ```bash
+    docker build -t sqlite-wasm-builder .
+    ```
+2.  Run the build:
+    ```bash
+    docker run --rm \
+      -e SQLITE_REF="main" \
+      -v "$(pwd)/out":/out \
+      -v "$(pwd)/src/bin":/src/bin \
+      sqlite-wasm-builder build
+    ```
+    **Note:** The `-v` flags are crucial. They mount your local directories into the container so that the build artifacts are saved back to your host machine.
+
+### Manual build
+
 1. Update the version number in `package.json` reflecting the current
    [SQLite version number](https://sqlite.org/download.html) and add a build
    identifier suffix like `-build1`. The complete version number should read
