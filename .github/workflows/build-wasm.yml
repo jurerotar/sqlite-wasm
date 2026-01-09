@@ -24,7 +24,7 @@ jobs:
 
       - name: Run build
         run: |
-          mkdir -p out
+          mkdir -p out src/bin
           docker run --rm \
             -e SQLITE_REF="${{ github.event.inputs.sqlite_ref }}" \
             -e BUILD_THREADS=$(nproc) \
@@ -33,10 +33,14 @@ jobs:
             -v "$(pwd)/out":/out \
             -v "$(pwd)/src/bin":/src/bin \
             sqlite-wasm-builder:env build
+          # Fallback fix for permissions if chown inside docker failed or was incomplete
+          sudo chown -R $(id -u):$(id -g) out src/bin
 
       - name: Check for changes
         id: git-check
         run: |
+          # Add files that might be newly created or modified
+          git add src/bin
           git status --porcelain
           if [ -n "$(git status --porcelain)" ]; then
             echo "changes=true" >> $GITHUB_OUTPUT

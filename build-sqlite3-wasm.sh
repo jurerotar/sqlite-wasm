@@ -129,6 +129,7 @@ log "Extracting npm-bundle.zip into /src/bin"
 rm -rf /src/bin/*
 mkdir -p /src/bin
 unzip -q -o "$OUT_DIR/npm-bundle.zip" -d /src/bin
+rm -f "$OUT_DIR/npm-bundle.zip"
 
 # If a single top-level directory exists, move its contents up
 shopt -s nullglob
@@ -140,6 +141,5 @@ if [ "${#entries[@]}" -eq 1 ] && [ -d "${entries[0]}" ]; then
 fi
 shopt -u nullglob
 
-log "Build complete. npm-bundle.zip is at $OUT_DIR/npm-bundle.zip"
-log "Extracted contents are in /src/bin"
+log "Build complete. Extracted contents are in /src/bin"
 exec /bin/ls -la /src/bin
