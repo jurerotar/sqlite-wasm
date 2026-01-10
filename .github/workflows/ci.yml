@@ -32,7 +32,7 @@ jobs:
         uses: ./.github/actions/node-setup
 
       - name: Run type check
-        run: npm run type-check
+        run: npm run check-types
 
   format:
     name: Format check
@@ -61,10 +61,8 @@ jobs:
       - name: Setup environment (node + install)
         uses: ./.github/actions/node-setup
 
-      - name: Install Playwright browsers + deps
-        uses: microsoft/playwright-github-action@v1
-        with:
-          browsers: chromium
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
 
       - name: Run tests
         id: run-tests
