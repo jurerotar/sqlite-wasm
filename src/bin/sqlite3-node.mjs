@@ -28,14 +28,14 @@
 **
 ** SQLITE_VERSION "3.52.0"
 ** SQLITE_VERSION_NUMBER 3052000
-** SQLITE_SOURCE_ID "2026-01-09 19:44:31 a4752c18a85bee0cef61ee5ac7911661c1894fb861412c957692069195a001a5"
+** SQLITE_SOURCE_ID "2026-01-10 00:38:00 1fd02a75a914f131948fe06fc99f851d3e226f9f1270e25393d79c493c28a347"
 **
-** Emscripten SDK: 4.0.22
+** Emscripten SDK: 4.0.23
 */
 // This code implements the `-sMODULARIZE` settings by taking the generated
 // JS program code (INNER_JS_CODE) and wrapping it in a factory function.
 
-// When targetting node and ES6 we use `await import ..` in the generated code
+// When targeting node and ES6 we use `await import ..` in the generated code
 // so the outer function needs to be marked as async.
 async function sqlite3InitModule(moduleArg = {}) {
   var moduleRtn;
@@ -280,7 +280,7 @@ var wasmBinary;
 var ABORT = false;
 
 // set by exit() and abort().  Passed to 'onExit' handler.
-// NOTE: This is also used as the process return code code in shell environments
+// NOTE: This is also used as the process return code in shell environments
 // but only when noExitRuntime is false.
 var EXITSTATUS;
 
@@ -492,7 +492,7 @@ function getBinarySync(file) {
   if (readBinary) {
     return readBinary(file);
   }
-  // Throwing a plain string here, even though it not normally adviables since
+  // Throwing a plain string here, even though it not normally advisable since
   // this gets turning into an `abort` in instantiateArrayBuffer.
   throw 'both async and sync fetching of the wasm failed';
 }
@@ -1114,7 +1114,7 @@ async function createWasm() {
       },
   createNode(parent, name, mode, dev) {
         if (FS.isBlkdev(mode) || FS.isFIFO(mode)) {
-          // no supported
+          // not supported
           throw new FS.ErrnoError(63);
         }
         MEMFS.ops_table ||= {
@@ -1338,7 +1338,7 @@ async function createWasm() {
           // If the buffer is located in main memory (HEAP), and if
           // memory can grow, we can't hold on to references of the
           // memory buffer, as they may get invalidated. That means we
-          // need to do copy its contents.
+          // need to copy its contents.
           if (buffer.buffer === HEAP8.buffer) {
             canOwn = false;
           }
@@ -1501,7 +1501,7 @@ async function createWasm() {
           return plugin['handle'](byteArray, fullname);
         }
       }
-      // In no plugin handled this file then return the original/unmodified
+      // If no plugin handled this file then return the original/unmodified
       // byteArray.
       return byteArray;
     };
@@ -2475,7 +2475,7 @@ async function createWasm() {
           } else {
             // node doesn't exist, try to create it
             // Ignore the permission bits here to ensure we can `open` this new
-            // file below. We use chmod below the apply the permissions once the
+            // file below. We use chmod below to apply the permissions once the
             // file is open.
             node = FS.mknod(path, mode | 0o777, 0);
             created = true;
@@ -3166,7 +3166,6 @@ async function createWasm() {
       return UTF8Decoder.decode(HEAPU8.subarray(ptr, end));
     };
   var SYSCALLS = {
-  DEFAULT_POLLMASK:5,
   calculateAt(dirfd, path, allowEmpty) {
         if (PATH.isAbs(path)) {
           return path;
@@ -4062,10 +4061,8 @@ async function createWasm() {
   try {
   
       var stream = SYSCALLS.getStreamFromFD(fd);
-      if (stream.stream_ops?.fsync) {
-        return stream.stream_ops.fsync(stream);
-      }
-      return 0; // we can't do anything synchronously; the in-memory FS is already synced to
+      var rtn = stream.stream_ops?.fsync?.(stream);
+      return rtn;
     } catch (e) {
     if (typeof FS == 'undefined' || !(e.name === 'ErrnoError')) throw e;
     return e.errno;
@@ -4878,9 +4875,9 @@ Module.runSQLite3PostLoadInit = async function(
 **
 ** SQLITE_VERSION "3.52.0"
 ** SQLITE_VERSION_NUMBER 3052000
-** SQLITE_SOURCE_ID "2026-01-09 19:44:31 a4752c18a85bee0cef61ee5ac7911661c1894fb861412c957692069195a001a5"
+** SQLITE_SOURCE_ID "2026-01-10 00:38:00 1fd02a75a914f131948fe06fc99f851d3e226f9f1270e25393d79c493c28a347"
 **
-** Emscripten SDK: 4.0.22
+** Emscripten SDK: 4.0.23
 */
 /*
   2022-05-22
@@ -7053,7 +7050,7 @@ globalThis.sqlite3ApiBootstrap.defaultConfig = Object.create(null);
 */
 globalThis.sqlite3ApiBootstrap.sqlite3 = undefined;
 globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
-  sqlite3.version = {"libVersion": "3.52.0", "libVersionNumber": 3052000, "sourceId": "2026-01-09 19:44:31 a4752c18a85bee0cef61ee5ac7911661c1894fb861412c957692069195a001a5","downloadVersion": 3520000,"scm":{ "sha3-256": "a4752c18a85bee0cef61ee5ac7911661c1894fb861412c957692069195a001a5","branch": "trunk","tags": "","datetime": "2026-01-09T19:44:31.051Z"}};
+  sqlite3.version = {"libVersion": "3.52.0", "libVersionNumber": 3052000, "sourceId": "2026-01-10 00:38:00 1fd02a75a914f131948fe06fc99f851d3e226f9f1270e25393d79c493c28a347","downloadVersion": 3520000,"scm":{ "sha3-256": "1fd02a75a914f131948fe06fc99f851d3e226f9f1270e25393d79c493c28a347","branch": "trunk","tags": "","datetime": "2026-01-10T00:38:00.277Z"}};
 });
 /**
   2022-07-08
@@ -18099,7 +18096,7 @@ try{
 // and return either the Module itself, or a promise of the module.
 //
 // We assign to the `moduleRtn` global here and configure closure to see
-// this as and extern so it won't get minified.
+// this as an extern so it won't get minified.
 
 if (runtimeInitialized)  {
   moduleRtn = Module;
