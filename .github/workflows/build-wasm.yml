@@ -1,4 +1,4 @@
-name: Build SQLite WASM
+name: Build SQLite Wasm
 
 on:
   workflow_dispatch:
@@ -97,18 +97,21 @@ jobs:
           fi
 
       - name: Create Pull Request
-        if: steps.check-branch.outputs.skip != 'true' && steps.git-check.outputs.changes == 'true'
+        if:
+          steps.check-branch.outputs.skip != 'true' &&
+          steps.git-check.outputs.changes == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message:
-            'chore: update SQLite WASM binaries from ${{
-            steps.resolve-ref.outputs.sqlite_ref }} (${{ steps.resolve-ref.outputs.sqlite_sha }})'
+            'chore: update SQLite Wasm binaries from ${{
+            steps.resolve-ref.outputs.sqlite_ref }} (${{
+            steps.resolve-ref.outputs.sqlite_sha }})'
           title:
-            'chore: update SQLite WASM binaries from ${{
+            'chore: update SQLite Wasm binaries from ${{
             steps.resolve-ref.outputs.sqlite_ref }}'
           body: |
-            This PR updates the SQLite WASM binaries in `src/bin` by building them from SQLite reference `${{ steps.resolve-ref.outputs.sqlite_ref }}` (commit `${{ steps.resolve-ref.outputs.sqlite_sha }}`).
+            This PR updates the SQLite Wasm binaries in `src/bin` by building them from SQLite reference `${{ steps.resolve-ref.outputs.sqlite_ref }}` (commit `${{ steps.resolve-ref.outputs.sqlite_sha }}`).
 
             Triggered by manual workflow dispatch.
           branch: ${{ steps.resolve-ref.outputs.branch_name }}
