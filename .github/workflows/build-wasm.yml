@@ -6,7 +6,7 @@ on:
       sqlite_ref:
         description: 'SQLite reference (tag, branch, or commit, or "latest")'
         required: true
-        default: 'latest'
+        default: 'master'
 
 jobs:
   build:
