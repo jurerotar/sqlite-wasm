@@ -6,4 +6,4 @@ pre-commit:
   commands:
     prettier:
       stage_fixed: true
-      run: npx prettier . --check
+      run: npx prettier . --write
