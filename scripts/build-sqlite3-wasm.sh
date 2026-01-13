@@ -111,7 +111,7 @@ make sqlite3.c
 cd ext/wasm
 
 log "Running make -j4 npm (ext/wasm)"
-make -j4 npm sqlite3_features="$SQLITE_FEATURES" emcc_opt="$EMCC_FLAGS"
+make -j4 npm emcc-opt-extra="$SQLITE_FEATURES $EMCC_FLAGS"
 
 # ensure artifact exists
 if [ ! -f npm-bundle.zip ]; then

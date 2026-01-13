@@ -8,12 +8,11 @@ on:
         required: true
         default: 'master'
       sqlite_features:
-        description:
-          'Custom SQLite features (passed to make as sqlite3_features)'
+        description: 'Custom SQLite features (passed to make as emcc-opt-extra)'
         required: false
         default: ''
       emcc_flags:
-        description: 'Custom emcc flags (passed to make as emcc_opt)'
+        description: 'Custom emcc flags (passed to make as emcc-opt-extra)'
         required: false
         default: ''
 
