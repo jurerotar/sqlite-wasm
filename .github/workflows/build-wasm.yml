@@ -7,6 +7,15 @@ on:
         description: 'SQLite reference (tag, branch, or commit, or "latest")'
         required: true
         default: 'master'
+      sqlite_features:
+        description:
+          'Custom SQLite features (passed to make as sqlite3_features)'
+        required: false
+        default: ''
+      emcc_flags:
+        description: 'Custom emcc flags (passed to make as emcc_opt)'
+        required: false
+        default: ''
 
 jobs:
   build:
@@ -75,6 +84,8 @@ jobs:
           mkdir -p out src/bin
           docker run --rm \
             -e SQLITE_REF="${{ steps.resolve-ref.outputs.sqlite_ref }}" \
+            -e SQLITE_FEATURES="${{ github.event.inputs.sqlite_features }}" \
+            -e EMCC_FLAGS="${{ github.event.inputs.emcc_flags }}" \
             -e HOST_UID="$(id -u)" \
             -e HOST_GID="$(id -g)" \
             -v "$(pwd)/out":/out \

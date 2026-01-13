@@ -274,6 +274,53 @@ for this package.
       sqlite-wasm-builder:env build
     ```
 
+## Build your own custom version
+
+If you need a custom build of SQLite Wasm with different features or
+optimization flags, you can fork this repository and use the provided
+infrastructure to build your own.
+
+> [!Warning]
+>
+> Custom builds are completely **untested and unsupported**. Please only raise
+> issues for the canonical build provided by this repository.
+
+### Configuration flags
+
+You can provide custom SQLite feature flags (e.g., `-DSQLITE_ENABLE_FTS5`) and
+emcc flags (e.g., `-Os`). A list of default enabled flags can be found
+[here](https://github.com/sqlite/sqlite/blob/35b9709d4675eb1ff9a8d51525b62f33e68e576f/ext/wasm/GNUmakefile#L396-L434).
+
+To disable features that are enabled by default, you can use `-U` to undefine a
+macro or set it to 0. For example, to disable the FTS5 extension or other
+features:
+
+- `-USQLITE_ENABLE_FTS5`
+- `-DSQLITE_OMIT_JSON=1` (Note: SQLite often uses `OMIT` macros for disabling
+  core features)
+
+To build your own version:
+
+1.  Fork this repository.
+2.  Follow the instructions in
+    [Building the SQLite Wasm locally](#building-the-sqlite-wasm-locally) to
+    test your changes. You can pass the flags as environment variables:
+
+    ```bash
+    docker run --rm \
+      -e SQLITE_REF="master" \
+      -e SQLITE_FEATURES="-DSQLITE_ENABLE_FTS5" \
+      -e EMCC_FLAGS="-Os" \
+      -v "$(pwd)/out":/out \
+      -v "$(pwd)/src/bin":/src/bin \
+      sqlite-wasm-builder:env build
+    ```
+
+3.  You can also use the GitHub Actions workflow in your fork to build and
+    generate a pull request with the new binaries by following the steps in
+    [Deploying a new version](#deploying-a-new-version). The workflow allows
+    specifying `sqlite_features` and `emcc_flags` as inputs.
+
 ## Running tests
 
 The test suite consists of Node.js tests and browser-based tests (using Vitest

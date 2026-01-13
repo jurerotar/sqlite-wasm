@@ -3,6 +3,8 @@ set -euo pipefail
 
 SQLITE_REPO="${SQLITE_REPO:-https://github.com/sqlite/sqlite.git}"
 SQLITE_REF="${SQLITE_REF:-master}"
+SQLITE_FEATURES="${SQLITE_FEATURES:-}"
+EMCC_FLAGS="${EMCC_FLAGS:-}"
 OUT_DIR="${OUT_DIR:-/out}"
 SRC_DIR="${WORKDIR:-/build/sqlite-src}"
 HOST_UID="${HOST_UID:-}"
@@ -58,6 +60,8 @@ log "Repo: $SQLITE_REPO"
 log "Ref:  $SQLITE_REF"
 log "Out: $OUT_DIR"
 log "Src dir: $SRC_DIR"
+log "SQLite features: $SQLITE_FEATURES"
+log "emcc flags: $EMCC_FLAGS"
 
 # prepare source dir: clone shallow or fetch+reset if exists
 if [ -d "$SRC_DIR/.git" ]; then
@@ -97,7 +101,7 @@ make sqlite3.c
 cd ext/wasm
 
 log "Running make -j4 npm (ext/wasm)"
-make -j4 npm
+make -j4 npm sqlite3_features="$SQLITE_FEATURES" emcc_opt="$EMCC_FLAGS"
 
 # ensure artifact exists
 if [ ! -f npm-bundle.zip ]; then
