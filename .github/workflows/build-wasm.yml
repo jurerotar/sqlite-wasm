@@ -44,6 +44,12 @@ jobs:
           echo "sqlite_sha=$SQLITE_SHA" >> $GITHUB_OUTPUT
           echo "branch_name=update-sqlite-wasm-${SQLITE_SHA}" >> $GITHUB_OUTPUT
 
+      - name: Resolve user
+        id: resolve-user
+        run: |
+          echo "uid=$(id -u)" >> $GITHUB_OUTPUT
+          echo "gid=$(id -g)" >> $GITHUB_OUTPUT
+
       - name: Check if branch exists
         id: check-branch
         run: |
@@ -72,16 +78,16 @@ jobs:
       - name: Run build
         if: steps.check-branch.outputs.skip != 'true'
         run: |
-          mkdir -p out src/bin
+          mkdir -p out src/bin/partials
           docker run --rm \
             -e SQLITE_REF="${{ steps.resolve-ref.outputs.sqlite_ref }}" \
-            -e HOST_UID="$(id -u)" \
-            -e HOST_GID="$(id -g)" \
+            -e HOST_UID="${{ steps.resolve-user.outputs.uid }}" \
+            -e HOST_GID="${{ steps.resolve-user.outputs.gid }}" \
             -v "$(pwd)/out":/out \
             -v "$(pwd)/src/bin":/src/bin \
             sqlite-wasm-builder:env build
           # Fallback fix for permissions if chown inside docker failed or was incomplete
-          sudo chown -R $(id -u):$(id -g) out src/bin
+          sudo chown -R ${{ steps.resolve-user.outputs.uid }}:${{ steps.resolve-user.outputs.gid }} out src/bin
 
       - name: Check for changes
         if: steps.check-branch.outputs.skip != 'true'
