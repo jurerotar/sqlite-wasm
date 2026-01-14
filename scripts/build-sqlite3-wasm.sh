@@ -139,14 +139,14 @@ fi
 shopt -u nullglob
 
 log "Copying partials to /src/bin/partials"
-# Files from ext/wasm/
-cp -v ext/wasm/{post-js-header.js,post-js-footer.js,sqlite3-vfs-helper.c-pp.js,sqlite3-vfs-opfs-sahpool.c-pp.js} /src/bin/partials/
-# Files from ext/wasm/api/
-cp -v ext/wasm/api/{sqlite3-api-prologue.js,sqlite3-api-glue.js,sqlite3-api-oo1.js,sqlite3-api-worker1.js} /src/bin/partials/
+# Files from current directory (ext/wasm/)
+cp -v {post-js-header.js,post-js-footer.js,sqlite3-vfs-helper.c-pp.js,sqlite3-vfs-opfs-sahpool.c-pp.js} /src/bin/partials/
+# Files from api/
+cp -v api/{sqlite3-api-prologue.js,sqlite3-api-glue.js,sqlite3-api-oo1.js,sqlite3-api-worker1.js} /src/bin/partials/
 # common and jaccwabyt
 mkdir -p /src/bin/partials/common /src/bin/partials/jaccwabyt
-cp -v ext/wasm/common/whwasmutil.js /src/bin/partials/common/
-cp -v ext/wasm/jaccwabyt/jaccwabyt.js /src/bin/partials/jaccwabyt/
+cp -v common/whwasmutil.js /src/bin/partials/common/
+cp -v jaccwabyt/jaccwabyt.js /src/bin/partials/jaccwabyt/
 
 log "Build complete. Extracted contents are in /src/bin"
 exec /bin/ls -la /src/bin
