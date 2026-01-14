@@ -2,5 +2,5 @@
 import './bin/partials/sqlite3-api-prologue.js';
 import './bin/partials/common/whwasmutil.js';
 import './bin/partials/jaccwabyt/jaccwabyt.js';
-import './bin/partials/sqlite3-api-glue.js';
-import './bin/partials/sqlite3-api-oo1.js';
+import './bin/partials/sqlite3-api-glue.c-pp.js';
+import './bin/partials/sqlite3-api-oo1.c-pp.js';

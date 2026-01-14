@@ -139,8 +139,8 @@ fi
 shopt -u nullglob
 
 log "Copying partials to /src/bin/partials"
-# Core API partials and VFS helpers are in api/
-cp -v api/{post-js-header.js,post-js-footer.js,sqlite3-api-prologue.js,sqlite3-api-glue.js,sqlite3-api-oo1.js,sqlite3-api-worker1.js,sqlite3-vfs-helper.c-pp.js,sqlite3-vfs-opfs-sahpool.c-pp.js} /src/bin/partials/
+# All core API and VFS partials are in api/
+cp -v api/{post-js-header.js,post-js-footer.js,sqlite3-api-prologue.js,sqlite3-api-glue.c-pp.js,sqlite3-api-oo1.c-pp.js,sqlite3-api-worker1.c-pp.js,sqlite3-vfs-helper.c-pp.js,sqlite3-vfs-opfs-sahpool.c-pp.js} /src/bin/partials/
 # common and jaccwabyt
 mkdir -p /src/bin/partials/common /src/bin/partials/jaccwabyt
 cp -v common/whwasmutil.js /src/bin/partials/common/
