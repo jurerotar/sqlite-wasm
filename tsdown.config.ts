@@ -1,5 +1,5 @@
 import { defineConfig, type UserConfig } from 'tsdown';
-import { copyFileSync, rmSync } from 'node:fs';
+import { copyFileSync, rmSync, readdirSync } from 'node:fs';
 
 const tsdownConfig: UserConfig[] = [
   defineConfig({
@@ -21,6 +21,12 @@ const tsdownConfig: UserConfig[] = [
         './dist/bin/sqlite3-worker1.mjs',
         './dist/sqlite3-worker1.mjs',
       );
+      // Copy HBC files
+      readdirSync('./src/bin')
+        .filter((file) => file.endsWith('.hbc'))
+        .forEach((file) => {
+          copyFileSync(`./src/bin/${file}`, `./dist/${file}`);
+        });
     },
   }),
   defineConfig({

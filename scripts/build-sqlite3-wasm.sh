@@ -138,5 +138,14 @@ if [ "${#entries[@]}" -eq 1 ] && [ -d "${entries[0]}" ]; then
 fi
 shopt -u nullglob
 
+# Generate HBC for Hermes-enabled environments
+log "Generating HBC files with hermesc"
+for f in /src/bin/*.mjs /src/bin/*.js; do
+  if [ -f "$f" ]; then
+    log "Compiling $f to HBC"
+    hermesc -emit-binary -out "${f%.*}.hbc" "$f" || log "Warning: failed to compile $f to HBC (likely contains unsupported JS features)"
+  fi
+done
+
 log "Build complete. Extracted contents are in /src/bin"
 exec /bin/ls -la /src/bin

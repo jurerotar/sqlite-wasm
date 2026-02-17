@@ -20,6 +20,7 @@ RUN apt-get update \
     unzip \
     curl \
     wabt \
+    hermes-engine \
  && rm -rf /var/lib/apt/lists/*
 
 # create useful dirs

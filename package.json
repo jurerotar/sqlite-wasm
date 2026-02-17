@@ -39,7 +39,8 @@
       "browser": "./dist/index.mjs"
     },
     "./package.json": "./package.json",
-    "./sqlite3.wasm": "./dist/sqlite3.wasm"
+    "./sqlite3.wasm": "./dist/sqlite3.wasm",
+    "./*.hbc": "./dist/*.hbc"
   },
   "files": [
     "dist",
