@@ -6,7 +6,7 @@ const oxfmtConfig: OxfmtConfig = defineConfig({
   singleQuote: true,
   tabWidth: 2,
   trailingComma: 'all',
-  ignorePatterns: ['/src/bin', '/dist', '/node_modules', 'package.json'],
+  ignorePatterns: ['/src/bin', '/dist', '/node_modules', '/issues', 'package.json'],
 });
 
 export default oxfmtConfig;
