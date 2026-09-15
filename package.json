@@ -39,7 +39,13 @@
       "browser": "./dist/index.mjs"
     },
     "./package.json": "./package.json",
-    "./sqlite3.wasm": "./dist/sqlite3.wasm"
+    "./sqlite3.wasm": "./dist/sqlite3.wasm",
+    "./bundler": "./dist/sqlite3-core-bundler-friendly.mjs",
+    "./bundler/vtab": "./dist/sqlite3-core-vtab-bundler-friendly.mjs",
+    "./bundler/kvvfs": "./dist/sqlite3-core-kvvfs-bundler-friendly.mjs",
+    "./bundler/opfs": "./dist/sqlite3-core-opfs-bundler-friendly.mjs",
+    "./bundler/opfs-wl": "./dist/sqlite3-core-opfs-wl-bundler-friendly.mjs",
+    "./bundler/sah-pool": "./dist/sqlite3-core-opfs-sahpool-bundler-friendly.mjs"
   },
   "workspaces": [
     "demos/*"

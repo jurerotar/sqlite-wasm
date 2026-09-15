@@ -1,6 +1,16 @@
 import { defineConfig, type UserConfig } from 'tsdown';
 import { copyFileSync, rmSync } from 'node:fs';
 
+const omitApiEntries = {
+  'sqlite3-core-bundler-friendly': 'src/bin/sqlite3-core-bundler-friendly.mjs',
+  'sqlite3-core-vtab-bundler-friendly': 'src/bin/sqlite3-core-vtab-bundler-friendly.mjs',
+  'sqlite3-core-kvvfs-bundler-friendly': 'src/bin/sqlite3-core-kvvfs-bundler-friendly.mjs',
+  'sqlite3-core-opfs-bundler-friendly': 'src/bin/sqlite3-core-opfs-bundler-friendly.mjs',
+  'sqlite3-core-opfs-wl-bundler-friendly': 'src/bin/sqlite3-core-opfs-wl-bundler-friendly.mjs',
+  'sqlite3-core-opfs-sahpool-bundler-friendly':
+    'src/bin/sqlite3-core-opfs-sahpool-bundler-friendly.mjs',
+};
+
 const tsdownConfig: UserConfig[] = [
   defineConfig({
     target: 'es2023',
@@ -8,6 +18,7 @@ const tsdownConfig: UserConfig[] = [
       index: 'src/browser.ts',
       node: 'src/node.ts',
       'bin/sqlite3-worker1': 'src/bin/sqlite3-worker1.mjs',
+      ...omitApiEntries,
     },
     format: ['esm'],
     dts: false,

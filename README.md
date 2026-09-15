@@ -169,6 +169,33 @@ this package.
 
 2. Run the build:
 
+   By default, this builds the full upstream npm bundle plus these omit-API variants. All variants
+   omit the deprecated Worker1 API:
+
+   - `core`: `omit-api="kvvfs OPFS vtab worker1"`, exported as `@sqlite.org/sqlite-wasm/bundler`
+   - `core-vtab`: `omit-api="kvvfs OPFS worker1"`, exported as
+     `@sqlite.org/sqlite-wasm/bundler/vtab`
+   - `core-kvvfs`: `omit-api="OPFS vtab worker1"`, exported as
+     `@sqlite.org/sqlite-wasm/bundler/kvvfs`
+   - `core-opfs`: `omit-api="kvvfs opfs-wl opfs-sahpool vtab worker1"`, exported as
+     `@sqlite.org/sqlite-wasm/bundler/opfs`
+   - `core-opfs-wl`: `omit-api="kvvfs opfs opfs-sahpool vtab worker1"`, exported as
+     `@sqlite.org/sqlite-wasm/bundler/opfs-wl`
+   - `core-opfs-sahpool`: `omit-api="kvvfs opfs opfs-wl vtab worker1"`, exported as
+     `@sqlite.org/sqlite-wasm/bundler/sah-pool`
+
+   To customize the generated variants, set `SQLITE_WASM_OMIT_API_BUILDS` to a semicolon-separated
+   list of `name=api api` entries. Set it to an empty string to build only the full bundle. Custom
+   variants are written to `src/bin`; add them to `tsdown.config.ts` and `package.json` if they
+   should be published as package subpaths.
+
+   Only bundler-friendly JavaScript artifacts are kept for generated variants. They are written to
+   `src/bin` with their variant name in the filename, for example
+   `sqlite3-core-bundler-friendly.mjs`, and load the default `sqlite3.wasm` from the full npm bundle
+   build. The package build emits optimized copies into `dist` and exports the fixed variants under
+   the `/bundler` package subpaths shown above. If the selected SQLite ref does not support
+   `omit-api`, set `SQLITE_WASM_OMIT_API_BUILDS` to an empty string to build only the full bundle.
+
    **Unix (Linux/macOS):**
 
    ```bash
