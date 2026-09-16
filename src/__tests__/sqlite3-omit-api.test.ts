@@ -104,7 +104,10 @@ describe('omit-api generated scripts', () => {
     const exports = packageJson.exports as Record<string, string | Record<string, string>>;
 
     for (const variant of variants) {
-      expect(exports[variant.exportPath]).toBe(variant.distPath);
+      expect(exports[variant.exportPath]).toMatchObject({
+        import: variant.distPath,
+        default: variant.distPath,
+      });
     }
 
     expect(exports['./bundler']).toBeUndefined();
