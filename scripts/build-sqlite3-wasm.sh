@@ -6,7 +6,6 @@ SQLITE_REF="${SQLITE_REF:-master}"
 SRC_DIR="${WORKDIR:-/build/sqlite-src}"
 HOST_UID="${HOST_UID:-}"
 HOST_GID="${HOST_GID:-}"
-WASM_OPT_WRAPPER=""
 EXTRACT_DIR=""
 
 log() { printf '\033[1;34m[build]\033[0m %s\n' "$*"; }
@@ -23,7 +22,6 @@ mkdir -p /src/bin
 cleanup() {
   local status=$?
   trap - EXIT
-  if [ -n "$WASM_OPT_WRAPPER" ]; then rm -f "$WASM_OPT_WRAPPER"; fi
   if [ -n "$EXTRACT_DIR" ]; then rm -rf "$EXTRACT_DIR"; fi
   if [ -n "$HOST_UID" ] && [ -n "$HOST_GID" ]; then
     log "Fixing ownership for /src/bin to $HOST_UID:$HOST_GID"
@@ -60,14 +58,6 @@ log "make sqlite3.c"
 make sqlite3.c
 cd ext/wasm
 
-# SQLite invokes wasm-opt with --all-features. Newer Binaryen versions then
-# emit compact imports, which are not supported by our browser/Node targets.
-# Append the compatibility flag after SQLite's flags, preserving its passes.
-WASM_OPT_WRAPPER="$(mktemp /tmp/sqlite-wasm-opt.XXXXXX)"
-printf '#!/usr/bin/env bash\nexec %q "$@" --disable-compact-imports\n' \
-  "$(command -v wasm-opt)" > "$WASM_OPT_WRAPPER"
-chmod +x "$WASM_OPT_WRAPPER"
-
 # Check the generated defaults before overriding the per-loader flags. Refuse
 # to silently discard additional flags introduced by an upstream SQLite update.
 make .wasmbuilds.make WASM_CUSTOM_INSTANTIATE=0
@@ -86,8 +76,7 @@ log "Running make -j4 npm with Cross-Origin Storage for browser loaders (excludi
 # SQLite's custom instantiateWasm bypasses Emscripten's COS loading path.
 make -j4 npm WASM_CUSTOM_INSTANTIATE=0 \
   'emcc.flags.bundler=-sCROSS_ORIGIN_STORAGE' \
-  'emcc.flags.esm=-sCROSS_ORIGIN_STORAGE' \
-  "bin.wasm-opt=$WASM_OPT_WRAPPER"
+  'emcc.flags.esm=-sCROSS_ORIGIN_STORAGE'
 
 # Extract to staging and verify before replacing the mounted output.
 log "Extracting npm-bundle.zip"

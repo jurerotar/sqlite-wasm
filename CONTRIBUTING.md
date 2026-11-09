@@ -88,11 +88,11 @@ functionality.
 
 (These steps can only be executed by maintainers.)
 
-1. Manually trigger the [GitHub Actions workflow](../../actions/workflows/build-wasm.yml). By
-   default, it uses the latest SQLite tag. This pull request will contain the latest `sqlite3.wasm`
-   and related bindings.
+1. Run the [Build SQLite Wasm workflow](../../actions/workflows/build-wasm.yml) with a full SQLite
+   commit SHA as `sqlite_ref`. Review the generated PR and sync types with the
+   [upstream API docs](https://sqlite.org/wasm/doc/trunk/api-index.md).
 
-2. Once the above pull request is validated and merged, update the version number in `package.json`,
-   reflecting the current [SQLite version number](https://sqlite.org/download.html) and add a build
-   identifier suffix like `-build1`. The complete version number should read something like
-   `3.41.2-build1`.
+2. Merge the PR and update `package.json` and `package-lock.json` to the SQLite version plus a build
+   suffix, e.g. `3.55.0-build1`.
+
+3. Run the [Publish package workflow](../../actions/workflows/publish.yml) from the default branch.

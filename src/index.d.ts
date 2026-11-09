@@ -3025,33 +3025,31 @@ export type WASM_API = {
   peek64f: (addr: WasmPointer) => Sqlite3Result;
 
   /**
-   * Requires `n` to be one of:
+   * Requires n to be one of:
    *
-   * - Integer 8, 16, or 32.
-   * - A integer-type TypedArray constructor: `Int8Array`, `Int16Array`,
-   *   `Int32Array`, or their `Uint` counterparts.
+   * - integer 8, 16, or 32.
+   * - A integer-type TypedArray constructor: Int8Array, Int16Array,
+   *   Int32Array, or their Uint counterparts.
    *
-   * If `BigInt` support is enabled, it also accepts the value 64 or a
-   * `BigInt64Array`/`BigUint64Array`, else it throws if passed 64 or one of
-   * those constructors.
+   * If this.bigIntEnabled is true, it also accepts the value 64 or a
+   * BigInt64Array/BigUint64Array, else it throws if passed 64 or one
+   * of those constructors.
    *
-   * Returns an integer-based `TypedArray` view of the WASM heap memory buffer
-   * associated with the given block size. If passed an integer as the first
-   * argument and unsigned is truthy then the `"U"` (unsigned) variant of that
-   * view is returned, else the signed variant is returned. If passed a
-   * `TypedArray` value, the 2nd argument is ignored. Note that `Float32Array`
-   * and `Float64Array` views are not supported by this function.
+   * Returns an integer-based TypedArray view of the WASM heap memory
+   * buffer associated with the given block size. If passed an integer
+   * as the first argument and unsigned is truthy then the "U"
+   * (unsigned) variant of that view is returned, else the signed
+   * variant is returned. If passed a TypedArray value, the 2nd
+   * argument is ignored.
    *
-   * Be aware that growth of the heap may invalidate any references to this
-   * heap, so do not hold a reference longer than needed and do not use a
-   * reference after any operation which may allocate. Instead, re-fetch the
-   * reference by calling this function again, which automatically refreshes the
-   * view if needed.
+   * Growth of the heap will invalidate any references to this heap,
+   * so do not hold a reference longer than needed and do not use a
+   * reference after any operation which may allocate. Instead,
+   * re-fetch the reference by calling this function again.
    *
-   * Throws if passed an invalid `n`.
+   * Throws if passed an invalid n.
    *
-   * Use of this function in client code is very rare. In practice, one of the
-   * (faster) convenience forms is used.
+   * @see https://sqlite.org/wasm/doc/trunk/api-wasm.md
    */
   heapForSize(n: 8, unsigned: false | undefined): Int8Array;
   heapForSize(n: 8, unsigned: true): Uint8Array;
@@ -3067,8 +3065,10 @@ export type WASM_API = {
   heapForSize(n: typeof Uint32Array): Uint32Array;
   heapForSize(n: 64, unsigned: false | undefined): BigInt64Array;
   heapForSize(n: 64, unsigned: true): BigUint64Array;
-  heapForSize(n: typeof Int32Array): BigInt64Array;
-  heapForSize(n: typeof Uint32Array): BigUint64Array;
+  heapForSize(n: typeof BigInt64Array): BigInt64Array;
+  heapForSize(n: typeof BigUint64Array): BigUint64Array;
+  heapForSize(n: typeof Float32Array): Float32Array;
+  heapForSize(n: typeof Float64Array): Float64Array;
 
   /** Faster convenience method to get a Int8Array view of the WASM heap. */
   heap8: () => Int8Array;
@@ -3093,6 +3093,18 @@ export type WASM_API = {
 
   /** Faster convenience method to get a BigUint64Array view of the WASM heap. */
   heap64u: () => BigUint64Array;
+
+  /**
+   * Convenience (and faster) equivalent of
+   * this.heapForSize(Float32Array).
+   */
+  heap32f: () => Float32Array;
+
+  /**
+   * Convenience (and faster) equivalent of
+   * this.heapForSize(Float64Array).
+   */
+  heap64f: () => Float64Array;
 
   /**
    * Fetches the `heapForSize()` for the given representation then writes the
@@ -3161,11 +3173,14 @@ export type WASM_API = {
   cstrToJs: (ptr: WasmPointer) => string | null;
 
   /**
-   * Expects its argument to be a pointer into the WASM heap memory which refers
-   * to a NUL-terminated C-style string encoded as UTF-8. Returns the length, in
-   * bytes, of the string, as for `strlen(3)`. As a special case, if the
-   * argument is falsy, then it returns null. Throws if the argument is out of
-   * range for `wasm.heap8u()`.
+   * Expects ptr to be a pointer into the WASM heap memory which
+   * refers to a NUL-terminated C-style string encoded as UTF-8.
+   * Returns the length, in bytes, of the string, as for `strlen(3)`.
+   * As a special case, if !ptr or if it's not a pointer then it
+   * returns `null`. Results are undefined if no NUL is found. Throws
+   * if ptr is out of range for target.heap8u().
+   *
+   * @see https://sqlite.org/wasm/doc/trunk/api-wasm.md
    */
   cstrlen: (ptr: WasmPointer) => number | null;
 
@@ -3651,17 +3666,25 @@ export type WASM_API = {
    */
 
   /**
-   * Returns true if its value is a WASM pointer type. That is, it's a a 32-bit
-   * integer greater than or equal to zero.
+   * isPtr() is an alias for isPtr32() or isPtr64(), depending on the
+   * value of target.ptr.size.
    *
-   * Sidebar: `isPtr()` is an alias for `isPtr32()`. If/when 64-bit WASM pointer
-   * support becomes widespread, it will become an alias for either `isPtr32()`
-   * or the as-yet-hypothetical `isPtr64()`, depending on a configuration
-   * option.
+   * @see https://sqlite.org/wasm/doc/trunk/api-wasm.md
    */
   isPtr: (v: unknown) => v is WasmPointer;
 
-  /** See {@link WASM_API#isPtr} */
+  /**
+   * Returns true if the given value appears to be legal for use as a
+   * WASM pointer value. Its _range_ of values is not (cannot be)
+   * validated except to ensure that it is a 32-bit integer with a
+   * value of 0 or greater. Likewise, it cannot verify whether the
+   * value actually refers to allocated memory in the WASM heap.
+   *
+   * Whether or not null or undefined are legal are context-dependent.
+   * They generally are legal but this function does not treat them as
+   * such because they're not strictly legal for passing as-is as WASM
+   * integer arguments.
+   */
   isPtr32: (v: unknown) => v is WasmPointer;
 
   /** Size of a WASM pointer in bytes. */
@@ -4486,7 +4509,16 @@ export type CAPI = {
       /** SQLITE_LIMIT_SCHEMA: maximum number of schema objects (since 3.54). */
       | 13
       /** SQLITE_LIMIT_TRIGGER_STEPS: maximum statements per trigger (since 3.54). */
-      | 14,
+      | 14
+      /**
+       * The maximum number of common table expressions (CTEs) allowed
+       * in a single SQL statements. This limit is used to limit possible
+       * exponential growth in the number of required cursors required for
+       * nested joins of CTEs. The limit is an absolute upper bound, and
+       * SQLite may refuse to compile a statement if the number of CTEs simply
+       * approaches this limit. Set this limit to 0 to disable the restriction.
+       */
+      | 15,
     newVal: number,
   ) => number;
 
@@ -8023,39 +8055,113 @@ export type CAPI = {
   sqlite3_js_db_uses_vfs: (db: DbPtr, vfsName: string, dbName: string) => boolean;
 
   /**
-   * Registers a callback for when the library finalizes the given non-0 WASM
-   * pointer. This lets JS code map state to native pointers and clean up that
-   * state regardless of how the native objects get finalized. `typeName` must
-   * identify the pointer's native type: `sqlite3*`, `sqlite3_stmt*`, or
-   * `sqlite3_context*`.
-   * The callback receives the pointer during native finalization, regardless
-   * of how it is finalized. WASM callbacks have signature `void(void*)`;
-   * JS functions are more efficient.
+   * Sets up the given callback to be called when the given WASM
+   * pointer is finalized by the library. The purposes of this is to
+   * provide client code with a way to map JS state to native
+   * pointers in such a way that the state can be cleaned up
+   * regardless of how the natives are finalized.
    *
-   * Repeated registrations of the same callback reference for the same pointer
-   * are deduplicated; distinct callback references are all queued. In loops,
-   * user-defined SQL functions, or functions which may encounter the same
-   * pointer repeatedly, avoid function literals: each creates a distinct
-   * callback instance. Assign the callback to a symbol and reuse it instead.
+   * typeName describes what data type ptr is. It must be one of:
    *
-   * @example
-   * ```ts
-   * const cleanup = (ptr: WasmPointer) => state.delete(ptr);
-   * // Reuse this reference whenever registering cleanup for a pointer:
-   * sqlite3.capi.sqlite3_js_on_pointer_dispose('sqlite3*', ptr, cleanup);
+   * "sqlite3*", "sqlite3_stmt*"
+   *
+   * and the ptr argument must be a non-null pointer to that type.
+   *
+   * The callback must be either a Function or a WASM function
+   * pointer[^1] to a function with the signature `void(*)(void*)`,
+   * a.k.a. "v(p)" in the library's function-binding parlance.
+   *
+   * It is legal to call this multiple times for a given combination
+   * of pointer and callback. Each callback will be added to the
+   * queue only once for each distinct callback reference, with the
+   * caveat noted below regarding callback references. That is,
+   * calling it N times with the same ptr/callback combination will
+   * only install the callback once, but N calls with N distinct
+   * callbacks will install all N.
+   *
+   * When used in loops or client functions which may see the same
+   * pointer multiple times, it is generally important to **not pass
+   * function literals**, as each such literal is a different
+   * instance, so an identical callback may be added N times for a
+   * given pointer. Functions should be assigned to symbols and
+   * those symbols should be passed in so that callback
+   * deduplication works:
+   *
+   * ```
+   * // NO:
+   * sqlite3_js_on_pointer_dispose(..., (x)=>...);
+   * // YES:
+   * const myFunc = (x)=>...;
+   * ...
+   * sqlite3_js_on_pointer_dispose(..., myFunc);
+   * // Also YES:
+   * let myFunc;
+   * ...
+   * sqlite3_js_on_pointer_dispose(..., (myFunc ??= (x)=>...));
    * ```
    *
-   * Callbacks run once on disposal, then the pointer's queue is cleared.
+   * For single-call cases, e.g. when passing a newly-initialized db
+   * or statement, a function literal is perfectly fine. Within
+   * loops and client-defined functions which are called more than
+   * once per native instance, function literals will cause grief in
+   * the form of potentially registering a separate callback for
+   * each invocation of the SQL function.
    *
-   * Use the pointer as an opaque cleanup key. Do not finalize it again, step
-   * statements, fetch columns, or leave it unusable for other listeners.
-   * Context pointers may only be used as opaque keys. Callback exceptions are
-   * ignored but may be logged via `sqlite3.config.error()`.
+   * On success it returns an unspecified truthy value. On error
+   * (argument validation issues) it returns an unspecified falsy
+   * value and has no side-effects. It does not throw because it's
+   * intended to be usable from cases where throwing is not
+   * permitted, but it only fails for argument validation.
    *
-   * @since SQLite 3.55.0
+   * When SQLite is about to free that pointer, all callbacks
+   * queued for it will be passed that pointer and then the
+   * callback queue for that pointer is cleared.
+   *
+   * Because the callback is called during the native-level
+   * finalization process, it must observe certain limitations:
+   *
+   * - It absolutely must not finalize the object, or results are
+   * well and truly undefined. Best case, a WASM crash.
+   *
+   * - Because multiple on-dispose listeners may be installed for
+   * any given pointer, the callback must not leave the object in an
+   * unusable state.
+   *
+   * - It should not perform "real work" with the pointer. e.g. a
+   * finalizing statement must not be stepped nor its columns
+   * fetched. A finalizing db should probably not run new
+   * queries.
+   *
+   * - Any exceptions are ignored but may trigger an alert via
+   * sqlite3.config.error().
+   *
+   * Ideally, such callbacks do nothing more than remove any state
+   * which they have mapped to the given pointer value, without
+   * actually trying to use the object referred to by that pointer.
+   * Sometimes, however, cleanup work may be necessary which
+   * involves judicious use of that type's methods.
+   *
+   * Added in 3.55.0.
+   *
+   * Design note: ideally we could support `sqlite3_context*`, as
+   * that would neatly tie in cleanup for user-defined SQL
+   * functions.  However, the C APIs do not guaranty stability of
+   * those pointers across calls. It currently provides
+   * _unguaranteed_ stability in two cases but does not for any
+   * aggregate-specific cases, making it unsuitable for the problem
+   * this API addresses (pun not intended).
+   *
+   * [^1]: Though callback may be a WASM function pointer, that is
+   *   actually less efficient than passing a JS function. The
+   *   on-dispose dispatching is called from native code, invoking a
+   *   JS function which the library connects to it during
+   *   bootstrapping.  sqlite3_js_on_pointer_dispose() receives the
+   *   notifications "second hand" through that mechanism.  If
+   *   callback is a WASM function, invoking it adds one more step
+   *   from JS-space into C-space and back.
    */
   sqlite3_js_on_pointer_dispose: (
-    typeName: 'sqlite3*' | 'sqlite3_stmt*' | 'sqlite3_context*',
+    typeName: 'sqlite3*' | 'sqlite3_stmt*',
     ptr: WasmPointer,
     callback: ((ptr: WasmPointer) => void) | WasmPointer,
   ) => boolean | null | undefined;
