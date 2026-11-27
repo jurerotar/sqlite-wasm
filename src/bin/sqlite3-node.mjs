@@ -14660,6 +14660,24 @@ sqlite3ApiBootstrap.initializers.push(function(sqlite3){
     return isSupportedBindType(v) || toss3("Unsupported bind() argument type:",typeof v);
   };
 
+  const __paramIndexCache = new WeakMap();
+  const lookupParamIndex = function(stmt, name){
+    if('string'!==typeof name){
+      return capi.sqlite3_bind_parameter_index(stmt.pointer, name);
+    }
+    let cache = __paramIndexCache.get(stmt);
+    const cached = cache?.get(name);
+    if(undefined!==cached) return cached;
+    const index = capi.sqlite3_bind_parameter_index(stmt.pointer, name);
+    /* Only cache exact matches, since conversion to a C string can
+       change the name (e.g. by truncating it at an embedded NUL). */
+    if(index>0 && name===capi.sqlite3_bind_parameter_name(stmt.pointer, index)){
+      if(!cache) __paramIndexCache.set(stmt, cache = new Map());
+      cache.set(name, index);
+    }
+    return index;
+  };
+
   /**
      If key is a number and within range of stmt's bound parameter
      count, key is returned.
@@ -14672,7 +14690,7 @@ sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   */
   const affirmParamIndex = function(stmt,key){
     const n = ('number'===typeof key)
-          ? key : capi.sqlite3_bind_parameter_index(stmt.pointer, key);
+          ? key : lookupParamIndex(stmt, key);
     if( 0===n || !util.isInt32(n) ) toss3("Invalid bind() parameter name: "+key);
     else if( n<1 || n>stmt.parameterCount ) toss3("Bind index",key,"is out of range.");
     return n;
@@ -15259,7 +15277,7 @@ sqlite3ApiBootstrap.initializers.push(function(sqlite3){
     */
     getParamIndex: function(name){
       return (affirmStmtOpen(this).parameterCount
-              ? capi.sqlite3_bind_parameter_index(this.pointer, name)
+              ? lookupParamIndex(this, name)
               : undefined);
     },
     /**
