@@ -27,9 +27,9 @@
 /* @preserve
 ** This code was built from sqlite3 version...
 **
-** SQLITE_VERSION "3.54.1"
-** SQLITE_VERSION_NUMBER 3054001
-** SQLITE_SOURCE_ID "2026-10-16 14:45:20 555e07ef33f69a0957d24d8e555b702464a131d6f1607f4c3c1e4551e8e6ca76"
+** SQLITE_VERSION "3.55.0"
+** SQLITE_VERSION_NUMBER 3055000
+** SQLITE_SOURCE_ID "2026-11-27 14:15:20 6bf72f2ee6e211f05c26fdf558cc29a58f288bea53bbcc8e2c0b1328cf456d72"
 **
 ** Emscripten SDK: 6.0.13
 */
@@ -90,7 +90,7 @@ var ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIR
 /**
    This file was preprocessed using:
 
-   ./c-pp -o ./bld/pre-js.bundler.js -Dtarget:es6-module -Dtarget:es6-bundler-friendly api/pre-js.c-pp.js
+   ./c-pp -o ./bld/pre-js.bundler.js -@policy=error -Dtarget:es6-module -Dtarget:es6-bundler-friendly api/pre-js.c-pp.js
 */
 /* END FILE: api/pre-js.js. */
 // end include: ./bld/pre-js.bundler.js
@@ -509,7 +509,7 @@ async function createWasm() {
 
   // Expose the build-time hash so that custom Module['instantiateWasm']
   // callbacks can implement their own COS-aware loading path.
-  Module['wasmHash'] = { algorithm: 'SHA-256', value: 'ceb5f93d05868430e1eabb2633ea1c1aceb2bf4e6e0ad1d82e3244e437310843' };
+  Module['wasmHash'] = { algorithm: 'SHA-256', value: '4d3621f1fe4613e4f123a73a691fe3a2e6cb4f3cf4b25a3b77c6f7c73b6820ac' };
 
   // User shell pages can write their own Module.instantiateWasm = function(imports, successCallback) callback
   // to manually instantiate the Wasm module themselves. This allows pages to
@@ -4204,7 +4204,8 @@ if (Module['printErr']) err = Module['printErr'];
 
 
 // Imports from the Wasm binary.
-var _sqlite3_status64,
+var _sqlite3__wasm_disposal_notifier,
+  _sqlite3_status64,
   _sqlite3_status,
   _sqlite3_db_status64,
   _sqlite3_msize,
@@ -4474,6 +4475,7 @@ var _sqlite3_status64,
 
 
 function assignWasmExports(wasmExports) {
+  _sqlite3__wasm_disposal_notifier = Module['_sqlite3__wasm_disposal_notifier'] = wasmExports['sqlite3__wasm_disposal_notifier'];
   _sqlite3_status64 = Module['_sqlite3_status64'] = wasmExports['sqlite3_status64'];
   _sqlite3_status = Module['_sqlite3_status'] = wasmExports['sqlite3_status'];
   _sqlite3_db_status64 = Module['_sqlite3_db_status64'] = wasmExports['sqlite3_db_status64'];
@@ -4883,21 +4885,21 @@ Module.runSQLite3PostLoadInit = async function(
   'use strict';
   delete EmscriptenModule.runSQLite3PostLoadInit;
   //console.warn("This is the start of Module.runSQLite3PostLoadInit()");
-  /* This function will contain at least the following:
+  /* Post-build, this function will contain at least the following:
 
-     - post-js-header.js          => this file
-       - sqlite3-api-prologue.js  => Bootstrapping bits for the following files
-       - common/whwasmutil.js     => Generic JS/WASM glue
-       - jaccwabyt/jaccwabyt.js   => C struct-binding glue
-       - sqlite3-api-glue.js      => glues previous parts together
-       - sqlite3-api-oo1.js       => SQLite3 OO API #1
-       - sqlite3-api-worker1.js   => Worker-based API
-       - sqlite3-vfs-helper.c-pp.js  => Utilities for VFS impls
-       - sqlite3-vtab-helper.c-pp.js => Utilities for virtual table impls
-       - sqlite3-vfs-opfs.c-pp.js => OPFS VFS
-       - sqlite3-vfs-opfs-sahpool.c-pp.js => OPFS SAHPool VFS
-       - sqlite3-vfs-opfs-wl.c-pp.js => WebLock-using OPFS VFS
-     - post-js-footer.js          => this file's epilogue
+     - post-js-header.js               => this file
+       - sqlite3-api-prologue.c-pp.js  => Bootstrapping bits for the following files
+       - common/whwasmutil.c-pp.js     => Generic JS/WASM glue
+       - jaccwabyt/jaccwabyt.c-pp.js   => C struct-binding glue
+       - sqlite3-api-glue.js           => glues previous parts together and binds the C-style API
+       - sqlite3-api-oo1.js            => SQLite3 OO API #1
+       - sqlite3-api-worker1.js        => Worker1 API
+       - sqlite3-vfs-helper.c-pp.js    => Utilities for VFS impls
+       - sqlite3-vtab-helper.c-pp.js   => Utilities for virtual table impls
+       - sqlite3-vfs-opfs.c-pp.js      => "opfs" VFS
+       - sqlite3-vfs-opfs-sahpool.c-pp.js => "opfs-sahpool" VFS
+       - sqlite3-vfs-opfs-wl.c-pp.js   => "opfs-wl" VFS
+     - post-js-footer.js               => this file's epilogue
 
      And all of that gets sandwiched between extern-pre-js.js and
      extern-post-js.js.
@@ -4931,9 +4933,9 @@ Module.runSQLite3PostLoadInit = async function(
 /* @preserve
 ** This code was built from sqlite3 version...
 **
-** SQLITE_VERSION "3.54.1"
-** SQLITE_VERSION_NUMBER 3054001
-** SQLITE_SOURCE_ID "2026-10-16 14:45:20 555e07ef33f69a0957d24d8e555b702464a131d6f1607f4c3c1e4551e8e6ca76"
+** SQLITE_VERSION "3.55.0"
+** SQLITE_VERSION_NUMBER 3055000
+** SQLITE_SOURCE_ID "2026-11-27 14:15:20 6bf72f2ee6e211f05c26fdf558cc29a58f288bea53bbcc8e2c0b1328cf456d72"
 **
 ** Emscripten SDK: 6.0.13
 */
@@ -4962,12 +4964,11 @@ Module.runSQLite3PostLoadInit = async function(
 
   Documentation home page: https://sqlite.org/wasm
 */
-
 /**
-   sqlite3ApiBootstrap() is the only global symbol persistently
-   exposed by this API. It is intended to be called one time at the
-   end of the API amalgamation process and passed configuration details
-   for the current environment.
+   sqlite3ApiBootstrap() is intended to be called one time at the end
+   of the API amalgamation process, after the WASM file is loaded, and
+   passed configuration details for the current WASM environment. It
+   sets up and returns the sqlite3 namespace object.
 
    This function is not intended for client-level use. It is intended
    for use in creating bundles configured for specific WASM
@@ -4979,8 +4980,8 @@ Module.runSQLite3PostLoadInit = async function(
    away details specific to any given WASM environment, primarily so
    that it can be used without any direct dependency on
    Emscripten. (Note the default values for the config object!) The
-   config object is only honored the first time this is
-   called. Subsequent calls ignore the argument and return the same
+   config object is only honored the first time this is called.
+   Subsequent calls ignore the argument and return the same
    (configured) object which gets initialized by the first call.  This
    function will throw if any of the required config options are
    missing.
@@ -5003,11 +5004,12 @@ Module.runSQLite3PostLoadInit = async function(
      to be in `exports.__indirect_function_table`.
 
    - `bigIntEnabled`: true if BigInt support is enabled. Defaults to
-     true if `globalThis.BigInt64Array` is available, else false. Some APIs
-     will throw exceptions if called without BigInt support, as BigInt
-     is required for marshalling C-side int64 into and out of JS.
-     (Sidebar: it is technically possible to add int64 support via
-     marshalling of int32 pairs, but doing so is unduly invasive.)
+     true if `globalThis.BigInt64Array` is available, else false. Some
+     APIs are unavailable or may throw exceptions if called without
+     BigInt support, as BigInt is required for marshalling C-side
+     int64 into and out of JS.  (Sidebar: it is technically possible
+     to add int64 support via marshalling of int32 pairs, but doing so
+     is unduly invasive.)
 
    - `allocExportName`: the name of the function, in `exports`, of the
      `malloc(3)`-compatible routine for the WASM environment. Defaults
@@ -5071,17 +5073,16 @@ Module.runSQLite3PostLoadInit = async function(
    module, though.
 
    Both sqlite3ApiBootstrap.defaultConfig and
-   globalThis.sqlite3ApiConfig get deleted by sqlite3ApiBootstrap()
-   because any changes to them made after that point would have no
-   useful effect. This function also deletes itself from globalThis
-   when it's called.
+   globalThis.sqlite3ApiConfig get deleted during a successful call to
+   to this function because any changes to them made after that point
+   would have no useful effect.
 
    This function returns a Promise to the sqlite3 namespace object,
    which resolves after the async pieces of the library init are
    complete.
 */
 'use strict';
-globalThis.sqlite3ApiBootstrap = async function sqlite3ApiBootstrap(
+const sqlite3ApiBootstrap = async function sqlite3ApiBootstrap(
   apiConfig = (globalThis.sqlite3ApiConfig || sqlite3ApiBootstrap.defaultConfig)
 ){
   if(sqlite3ApiBootstrap.sqlite3){ /* already initialized */
@@ -7106,7 +7107,6 @@ globalThis.sqlite3ApiBootstrap = async function sqlite3ApiBootstrap(
      objects...
   */
   delete globalThis.sqlite3ApiConfig;
-  delete globalThis.sqlite3ApiBootstrap;
   delete sqlite3ApiBootstrap.defaultConfig;
   return sqlite3.asyncPostInit().then((s)=>{
     if( 'undefined'!==typeof sqlite3InitScriptInfo/* from post-js-header.js */ ){
@@ -7122,7 +7122,7 @@ globalThis.sqlite3ApiBootstrap = async function sqlite3ApiBootstrap(
 }/*sqlite3ApiBootstrap()*/;
 
 /**
-  globalThis.sqlite3ApiBootstrap.initializers is an internal detail
+  sqlite3ApiBootstrap.initializers is an internal detail
   used by the various pieces of the sqlite3 API's amalgamation
   process. It must not be modified by client code except when plugging
   such code into the amalgamation process.
@@ -7138,15 +7138,15 @@ globalThis.sqlite3ApiBootstrap = async function sqlite3ApiBootstrap(
   utilized until the whwasmutil.js part is plugged in via
   sqlite3-api-glue.js.
 */
-globalThis.sqlite3ApiBootstrap.initializers = [];
+sqlite3ApiBootstrap.initializers = [];
 
 /**
-  globalThis.sqlite3ApiBootstrap.initializersAsync is an internal detail
+  sqlite3ApiBootstrap.initializersAsync is an internal detail
   used by the sqlite3 API's amalgamation process. It must not be
   modified by client code except when plugging such code into the
   amalgamation process.
 
-  The counterpart of globalThis.sqlite3ApiBootstrap.initializers,
+  The counterpart of sqlite3ApiBootstrap.initializers,
   specifically for initializers which are asynchronous. All entries in
   this list must be either async functions, non-async functions which
   return a Promise, or a Promise. Each function in the list is called
@@ -7158,10 +7158,10 @@ globalThis.sqlite3ApiBootstrap.initializers = [];
 
   This list is not processed until the client calls
   sqlite3.asyncPostInit(). This means, for example, that intializers
-  added to globalThis.sqlite3ApiBootstrap.initializers may push entries to
+  added to sqlite3ApiBootstrap.initializers may push entries to
   this list.
 */
-globalThis.sqlite3ApiBootstrap.initializersAsync = [];
+sqlite3ApiBootstrap.initializersAsync = [];
 
 /**
    Client code may assign sqlite3ApiBootstrap.defaultConfig an
@@ -7172,18 +7172,18 @@ globalThis.sqlite3ApiBootstrap.initializersAsync = [];
    an environment-suitable configuration without having to define a new
    global-scope symbol.
 */
-globalThis.sqlite3ApiBootstrap.defaultConfig = Object.create(null);
+sqlite3ApiBootstrap.defaultConfig = Object.create(null);
 
 /**
    Placeholder: gets installed by the first call to
-   globalThis.sqlite3ApiBootstrap(). However, it is recommended that the
+   sqlite3ApiBootstrap(). However, it is recommended that the
    caller of sqlite3ApiBootstrap() capture its return value and delete
-   globalThis.sqlite3ApiBootstrap after calling it. It returns the same
+   sqlite3ApiBootstrap after calling it. It returns the same
    value which will be stored here.
 */
-globalThis.sqlite3ApiBootstrap.sqlite3 = undefined;
-globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
-  sqlite3.version = {"libVersion": "3.54.1", "libVersionNumber": 3054001, "sourceId": "2026-10-16 14:45:20 555e07ef33f69a0957d24d8e555b702464a131d6f1607f4c3c1e4551e8e6ca76","downloadVersion": 3540100,"scm":{ "sha3-256": "555e07ef33f69a0957d24d8e555b702464a131d6f1607f4c3c1e4551e8e6ca76","branch": "branch-3.54","tags": "release version-3.54.1","datetime": "2026-10-16T14:45:20.546Z"}};
+sqlite3ApiBootstrap.sqlite3 = undefined;
+sqlite3ApiBootstrap.initializers.push(function(sqlite3){
+  sqlite3.version = {"libVersion": "3.55.0", "libVersionNumber": 3055000, "sourceId": "2026-11-27 14:15:20 6bf72f2ee6e211f05c26fdf558cc29a58f288bea53bbcc8e2c0b1328cf456d72","downloadVersion": 3550000,"scm":{ "sha3-256": "6bf72f2ee6e211f05c26fdf558cc29a58f288bea53bbcc8e2c0b1328cf456d72","branch": "trunk","tags": "","datetime": "2026-11-27T14:15:20.131Z"}};
 });
 /**
   2022-07-08
@@ -7207,15 +7207,15 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
 
   and SQLite:
 
-  https://sqlite.org
+  https://sqlite.org/src/dir/ext/wasm/common
 
   This file is kept in sync between both of those trees.
 
   This build was generated using:
 
-  ./c-pp -o js/whwasmutil.js -@policy=error wasmutil/whwasmutil.c-pp.js
+  ./c-pp -o ./bld/sqlite3-api.bundler.js -@policy=error -Dtarget:es6-module -Dtarget:es6-bundler-friendly ./bld/sqlite3-license-version.js api/sqlite3-api-prologue.c-pp.js ./bld/sqlite3-api-build-version.js common/whwasmutil.c-pp.js jaccwabyt/jaccwabyt.c-pp.js api/sqlite3-api-glue.c-pp.js api/sqlite3-api-oo1.c-pp.js api/sqlite3-api-worker1.c-pp.js api/sqlite3-vfs-helper.c-pp.js api/sqlite3-vtab-helper.c-pp.js api/sqlite3-vfs-kvvfs.c-pp.js api/opfs-common-shared.c-pp.js api/sqlite3-vfs-opfs.c-pp.js api/sqlite3-vfs-opfs-sahpool.c-pp.js api/sqlite3-vfs-opfs-wl.c-pp.js
 
-  by libcmpp 2.x 2fc4afc31f6505c27b9c34988973a2bd9b157d559247cdd26868ae75632c3a5e @ 2025-11-16 23:03:27.352 UTC
+  by libcmpp 2.0.x 8d8c04a3fafae2f13182be91e517a5a7d0a2d93da3232d7b0fbaeaff2f2e5b09 @ 2026-11-14 20:55:04.664 UTC
 */
 /**
    The primary goal of this function is to provide JS/WASM utility
@@ -7225,30 +7225,31 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
    that end, it populates the given object with various WASM-specific
    APIs. These APIs work with both 32- and 64-bit WASM builds.
 
+   This function is intended to be called after a WASM module has been
+   loaded, passed some of that module's state as described in the
+   following docs. Its arugment is both a configuration object and
+   a target which gets filled out with many new members.
+
    Forewarning: this API explicitly targets only browser environments.
    If a given non-browser environment has the capabilities needed for
    a given feature (e.g. TextEncoder), great, but it does not go out
    of its way to account for them and does not provide compatibility
    crutches for them. That said: no specific incompatibilities with,
-   e.g., node.js are known (whereas it is known that some folks
-   use this with node.js).
+   e.g., node.js are known (whereas it is known that some folks use
+   this with node.js via the sqlite3.org JS/WASM bindings).
 
    Intended usage:
 
    ```
-   const target = {}; // ... some object ...
-   globalThis.WhWasmUtilInstaller(target);
-   delete globalThis.WhWasmUtilInstaller;
+   const target = { ...see config options below... };
+   import {default as whw} from "./whwasmutil.mjs";
+   whw(target);
    ```
 
    The `target` object then holds the APIs. The caller may set certain
    properties on it, before calling this, to configure it, as
    documented below.
 
-   The global-scope symbol for this function is intended only to
-   provide an easy way to make it available to 3rd-party scripts and
-   "should" be deleted after calling it. That symbol is _not_ used
-   within the library.
 
    It currently offers alternatives to the following
    Emscripten-generated APIs:
@@ -7290,11 +7291,11 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
 
    How to install...
 
-   Passing an object to this function will install this library's
-   functionality into that object. It returns its argument.
+   Passing an object to this function both pulls the configuration
+   from that object and installs this library's functionality into
+   that object. It returns its argument.  It throws for various error
+   conditions, such as missing required config info (see below).
 
-   After installation, client code "should" delete this function's
-   global symbol (if any).
 
    This code requires that the target object have the following
    properties, though they needn't be available until the first time
@@ -7306,8 +7307,10 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
      contain the symbols exported by the WASM module associated with
      this code. In an Enscripten environment it must be set to
      `Module['asm']` (versions <=3.1.43) or `wasmExports` (versions
-     >=3.1.44). The exports object must contain a minimum of the
-     following symbols:
+     >=3.1.44). For WASI-SDK (or similar) builds, assigning
+     (target.instance=X.instance) suffices, where X is the result of
+     WebAssembly.instantiate(). The exports object must contain a
+     minimum of the following symbols:
 
      - `memory`: a WebAssembly.Memory object representing the WASM
        memory. _Alternately_, the `memory` property can be set as
@@ -7321,10 +7324,15 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
        `installFunction()` is called and the table cannot grow.
 
    - `functionTable`: WebAssembly.Table object holding the indirect
-     function call table.  If not set then
-     `exports.__indirect_function_table` is assumed. Achtung: this
-     property gets replaced by a function with the same name (because
-     this API used that name before this config option was added).
+     function call table or a function which must return one. If not
+     set then `exports.__indirect_function_table` is assumed (and must
+     be set). If it is set and is not a function, it is replaced by a
+     function with the same name, and which returns that object,
+     because this API used that name before this config option was
+     added. If it is set to a function then it MUST return a
+     WebAssembly.Table object and MUST return the same instance on
+     each call (but it may defer any fetching/initialization until its
+     first call and may throw on error).
 
    In order to simplify downstream usage, if `target.exports` is not
    set when this is called then a property access interceptor
@@ -7343,6 +7351,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
    the BigInt type is not sufficient for full int64 integration with
    WASM: the target WASM file must also have been built with that
    support. In Emscripten that's done using the `-sWASM_BIGINT` flag.
+   On WASI-SDK use --target-wasm64-wasi.
 
    Some optional APIs require that the target have the following
    methods:
@@ -7358,6 +7367,11 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
      null/0 (for which it must be a no-op). In Emscripten this is
      conventionally made available via `Module['_free']`.
 
+   These are commonly injected by exporting the C library's malloc()
+   and free(). With WASI-SDK that's (--export=malloc --export=free) and
+   in Emscripten it's -SEXPORTED_FUNCTIONS=_malloc,_free.  However,
+   any compliant allocators will do.
+
    APIs which require allocation routines are explicitly documented as
    such and/or have "alloc" in their names.
 
@@ -7369,7 +7383,9 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
       set, it gets set to whatever this code thinks the pointer size
       is.  Modifying it after this call has no effect. A reliable
       way to get this value is (typeof X()), where X is a function
-      from target.exports which returns an innocuous pointer.
+      from target.exports which returns an innocuous const pointer.
+      The typeof will be 'number' on 32-bit builds and 'bigint'
+      on 64-bit.
 
    - `pointerSize`: if set, it must be one of 4 or 8 and must
       correspond to the value of `pointerIR`. If not set, it gets set
@@ -7377,8 +7393,13 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
       `pointerIR` is 'i64'). If `pointerSize` is set but `pointerIR`
       is not, `pointerIR` gets set appropriately, and vice versa.
 
-   When building with Emscripten's -sMEMORY64=1, `pointerIR` must be
-   set to 'i64' and/or `pointerSize` must be set to 8.
+   - `logger`: optional object with `debug`, `warn`, and/or `error`
+      properties which behave like their same-named counterparts in
+      the global console object. The default uses the console API
+      with a file-local prefix on each message.
+
+   When building with Emscripten's --target=wasm64, `pointerIR` must
+   be set to 'i64' and/or `pointerSize` must be set to 8.
 
    After calling this, the pointerIR and pointerSize properties are
    replaced with a read-only Object member named target.ptr. It
@@ -7399,8 +7420,8 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
    - `add(...args)` = performs "pointer arithmetic" (`wasmPtr+offset`
      does not work in 64-bit builds unless all operands are of type
      BigInt). Adds up all of its arguments, accounting for whether
-     each is a Number of BigInt, and returns either a Number or
-     BigInt.
+     each is a Number of BigInt, and returns either a value of the
+     same type as `this.null`.
 
    - `addn(...args)` = like `add()` but always returns its result as a
      Number. Equivalent to Number(add(...)).
@@ -7412,17 +7433,22 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
      newly-created (or config-provided) target. The current approach
      seemed better at the time.
 */
-'use strict';
-globalThis.WhWasmUtilInstaller =
-function WhWasmUtilInstaller(target){
-  'use strict';
+const WhWasmUtilInstaller = function WhWasmUtilInstaller(target){
   if(undefined===target.bigIntEnabled){
     target.bigIntEnabled = !!globalThis['BigInt64Array'];
   }
+  const LOGPREFIX = "common/whwasmutil.c-pp.js:";
 
   /** Throws a new Error, the message of which is the concatenation of
-      all args with a space between each. */
-  const toss = (...args)=>{throw new Error(args.join(' '))};
+      a file-local prefix and all args with a space between each. */
+  const toss = (...args)=>{
+    throw new Error(LOGPREFIX+" "+args.join(' '))
+  };
+
+  const warn = target.logger?.warn
+        || ((...args)=>console.warn(LOGPREFIX,...args));
+  const debug = target.logger?.debug
+        || ((...args)=>console.debug(LOGPREFIX,...args));
 
   if( !target.pointerSize && !target.pointerIR
       && target.alloc && target.dealloc ){
@@ -7455,7 +7481,7 @@ function WhWasmUtilInstaller(target){
       throws complaining that BigInt is not enabled. */
   const __BigInt = target.bigIntEnabled
         ? (v)=>BigInt(v || 0)
-        : (v)=>toss("BigInt support is disabled in this build.");
+        : toss("BigInt support is disabled in this build.");
 
   const __Number = (v)=>Number(v||0)/*treat undefined the same as null*/;
 
@@ -7487,11 +7513,21 @@ function WhWasmUtilInstaller(target){
      addition/subtraction expressions (which we frequently need for
      calculating pointer offsets).
   */
-  const __ptrAdd = function(...args){
-    let rc = __asPtrType(0);
-    for(const v of args) rc += __asPtrType(v);
-    return rc;
-  };
+  const __ptrAdd = (4 === __ptrSize)
+        ? function(a, b){
+          if(2 === arguments.length) return (Number(a || 0) + Number(b || 0)) | 0;
+          let rc = 0;
+          for(let i = 0; i < arguments.length; ++i) rc += Number(arguments[i] || 0);
+          return rc | 0;
+        }
+        : function(a, b){
+          if(2 === arguments.length) return BigInt(a || 0) + BigInt(b || 0);
+          let rc = 0n;
+          for(let i = 0; i < arguments.length; ++i) rc += BigInt(arguments[i] || 0);
+          return rc;
+        };
+
+  const nu = (...args)=>Object.assign(Object.create(null),...args);
 
   /** Set up target.ptr... */
   {
@@ -7508,19 +7544,13 @@ function WhWasmUtilInstaller(target){
         set: ()=>toss("ptr["+name+"] is read-only.")
       });
       return f;
-    })(
-      'null', __NullPtr
-    )(
-      'size', __ptrSize
-    )(
-      'ir', __ptrIR
-    )(
-      'coerce', __asPtrType
-    )(
-      'add', __ptrAdd
-    )(
-      'addn', (4===__ptrIR) ? __ptrAdd : (...args)=>Number(__ptrAdd(...args))
-    );
+    })
+    ('null', __NullPtr)
+    ('size', __ptrSize)
+    ('ir', __ptrIR)
+    ('coerce', __asPtrType)
+    ('add', __ptrAdd)
+    ('addn', (4===__ptrIR) ? __ptrAdd : (...args)=>Number(__ptrAdd(...args)));
   }
 
   if(!target.exports){
@@ -7532,12 +7562,9 @@ function WhWasmUtilInstaller(target){
 
   /** Stores various cached state. */
   const cache = Object.create(null);
-  /** Previously-recorded size of cache.memory.buffer, noted so that
-      we can recreate the view objects if the heap grows. */
-  cache.heapSize = 0;
   /** WebAssembly.Memory object extracted from target.memory or
-      target.exports.memory the first time heapWrappers() is
-      called. */
+      target.exports.memory the first time __HEAPx() is called is used
+      (see __HEAP8, __HEAP32, etc.). */
   cache.memory = null;
   /** uninstallFunction() puts table indexes in here for reuse and
       installFunction() extracts them. */
@@ -7547,15 +7574,25 @@ function WhWasmUtilInstaller(target){
   */
   cache.scopedAlloc = [];
 
-  /** Push the pointer ptr to the current cache.scopedAlloc list
-      (which must already exist) and return ptr. */
-  cache.scopedAlloc.pushPtr = (ptr)=>{
-    cache.scopedAlloc[cache.scopedAlloc.length-1].push(ptr);
+  /** Push the non-function pointer ptr to the current
+      cache.scopedAlloc list (which must already exist) and return
+      ptr. */
+  cache.scopedAlloc.pushPtr = (ptr) => {
+    const top = cache.scopedAlloc[cache.scopedAlloc.length - 1];
+    if( top ) top.ptr.push(ptr);
     return ptr;
   };
 
+  /** Push the given indirect function table pointer to the current
+      cache.scopedAlloc object (which must already exist) and return
+      it. */
+  cache.scopedAlloc.pushFuncPtr = (indirectFuncPtr) => {
+    const top = cache.scopedAlloc[cache.scopedAlloc.length - 1];
+    if( top ) top.func.push(indirectFuncPtr);
+    return indirectFuncPtr;
+  };
   cache.utf8Decoder = new TextDecoder();
-  cache.utf8Encoder = new TextEncoder('utf-8');
+  cache.utf8Encoder = new TextEncoder();
 
   /**
      For the given IR-like string in the set ('i8', 'i16', 'i32',
@@ -7577,51 +7614,128 @@ function WhWasmUtilInstaller(target){
   };
 
   /**
-     If (cache.heapSize !== cache.memory.buffer.byteLength), i.e. if
-     the heap has grown since the last call, updates cache.HEAPxyz.
-     Returns the cache object.
+     The first time this is invoked, it sets up cache.memory, throwing
+     if neither target.memory nor target.exports.memory are a
+     WebAssembly.Memory object. It replaces itself with a function
+     which simply returns cache.memory then returns cache.memory.
+
+     i.e. throws on the first call (only) if no Memory is available,
+     else returns that Memory object.
   */
-  const heapWrappers = function(){
-    if(!cache.memory){
+  let __Memory = ()=>{
+    if( !cache.memory ){
       cache.memory = (target.memory instanceof WebAssembly.Memory)
         ? target.memory : target.exports.memory;
-    }else if(cache.heapSize === cache.memory.buffer.byteLength){
-      return cache;
-    }
-    // heap is newly-acquired or has been resized....
-    const b = cache.memory.buffer;
-    cache.HEAP8 = new Int8Array(b); cache.HEAP8U = new Uint8Array(b);
-    cache.HEAP16 = new Int16Array(b); cache.HEAP16U = new Uint16Array(b);
-    cache.HEAP32 = new Int32Array(b); cache.HEAP32U = new Uint32Array(b);
-    cache.HEAP32F = new Float32Array(b); cache.HEAP64F = new Float64Array(b);
-    if(target.bigIntEnabled){
-      if( 'undefined'!==typeof BigInt64Array ){
-        cache.HEAP64 = new BigInt64Array(b); cache.HEAP64U = new BigUint64Array(b);
-      }else{
-        toss("BigInt support is enabled, but the BigInt64Array type is missing.");
+      if( !(cache.memory instanceof WebAssembly.Memory) ){
+        toss("Missing target.memory or target.exports.memory",
+             "WebAssembly.Memory object.");
       }
     }
-    cache.heapSize = b.byteLength;
-    return cache;
-  };
+    //warn("cache.memory =",cache.memory);
+    __Memory = ()=>cache.memory;
+    return cache.memory;
+  }
 
-  /** Convenience equivalent of this.heapForSize(8,false). */
-  target.heap8 = ()=>heapWrappers().HEAP8;
+  /* True if TypedArray view needs to be created or reinitialized. */
+  const memoryViewNeedsUpdate = (view)=>
+        view?.byteLength !== __Memory().buffer.byteLength;
 
-  /** Convenience equivalent of this.heapForSize(8,true). */
-  target.heap8u = ()=>heapWrappers().HEAP8U;
+  /*
+    __HEAPx each return a TypeArray view of cache.memory.  These
+    lazily initialize both cache.memory and cache._viewX, and update
+    the view if cache.memory grows. Don't use these in a loop: get a
+    handle before the loop.
 
-  /** Convenience equivalent of this.heapForSize(16,false). */
-  target.heap16 = ()=>heapWrappers().HEAP16;
+    __HEAPx.shift is the number of bits which pointers must be
+    right-shifted when using them as an index for this heap.
+  */
+  const __HEAP8 = ()=>(memoryViewNeedsUpdate(cache._view8)
+                       ? (cache._view8=new Int8Array(cache.memory.buffer))
+                       : cache._view8);
+  const __HEAP8U = ()=>(memoryViewNeedsUpdate(cache._view8u)
+                        ? (cache._view8u=new Uint8Array(cache.memory.buffer))
+                        : cache._view8u);
+  __HEAP8.shift = __HEAP8U.shift = 0;
 
-  /** Convenience equivalent of this.heapForSize(16,true). */
-  target.heap16u = ()=>heapWrappers().HEAP16U;
+  const __HEAP16 = ()=>(memoryViewNeedsUpdate(cache._view16)
+                        ? (cache._view16=new Int16Array(cache.memory.buffer))
+                        : cache._view16);
+  const __HEAP16U = ()=>(memoryViewNeedsUpdate(cache._view16u)
+                         ? (cache._view16u=new Uint16Array(cache.memory.buffer))
+                         : cache._view16u);
+  __HEAP16.shift = __HEAP16U.shift = 1;
 
-  /** Convenience equivalent of this.heapForSize(32,false). */
-  target.heap32 = ()=>heapWrappers().HEAP32;
+  const __HEAP32 = ()=>(memoryViewNeedsUpdate(cache._view32)
+                        ? (cache._view32=new Int32Array(cache.memory.buffer))
+                        : cache._view32);
+  const __HEAP32U = ()=>(memoryViewNeedsUpdate(cache._view32u)
+                         ? (cache._view32u=new Uint32Array(cache.memory.buffer))
+                         : cache._view32u);
+  __HEAP32.shift = __HEAP32U.shift = 2;
 
-  /** Convenience equivalent of this.heapForSize(32,true). */
-  target.heap32u = ()=>heapWrappers().HEAP32U;
+  const __HEAP64 = (target.bigIntEnabled && ('undefined'!==typeof BigInt64Array))
+        ? ()=>(memoryViewNeedsUpdate(cache._view64)
+               ? (cache._view64=new BigInt64Array(cache.memory.buffer))
+               : cache._view64)
+        : ()=>toss("BigInt64Array is not available.")
+  const __HEAP64U = (target.bigIntEnabled && ('undefined'!==typeof BigUint64Array))
+    ? ()=>(memoryViewNeedsUpdate(cache._view64u)
+           ? (cache._view64u=new BigUint64Array(cache.memory.buffer))
+           : cache._view64u)
+        : ()=>toss("BigUint64Array is not available.");
+  __HEAP64.shift = __HEAP64U.shift = 3;
+
+  const __HEAP32F = ()=>(memoryViewNeedsUpdate(cache._view32f)
+                         ? (cache._view32f=new Float32Array(cache.memory.buffer))
+                         : cache._view32f);
+  __HEAP32F.shift = 2;
+  const __HEAP64F = ('undefined'!==typeof Float64Array)
+        ? ()=>(memoryViewNeedsUpdate(cache._view64f)
+               ? (cache._view64f=new Float64Array(cache.memory.buffer))
+               : cache._view64f)
+        : ()=>toss("Float64Array is not available.");
+  __HEAP64F.shift = 3;
+
+  /* Map of IR (and internal pseudo-IR) values to __HEAPx funcs. */
+  const __typeToHeap = function(type){
+    return this[type] || toss("Unknown type ID:",type);
+  }.bind(Object.freeze(Object.seal(
+    nu({
+      i1: __HEAP8, i8: __HEAP8,
+      //i1u: __HEAP8,  u8: __HEAP8U,
+      i16: __HEAP16, //u16: __HEAP16U,
+      i32: __HEAP32, //u32: __HEAP32U,
+      i64: __HEAP64, //u64: __HEAP64U,
+      f32: __HEAP32F,
+      f64: __HEAP64F,
+      double: __HEAP64F
+    })
+  )));
+
+  /** Convenience (and faster) equivalent of this.heapForSize(8,false). */
+  target.heap8 = __HEAP8;
+  /** Convenience (and faster) equivalent of this.heapForSize(8,true). */
+  target.heap8u = __HEAP8U;
+  /** Convenience (and faster) equivalent of this.heapForSize(16,false). */
+  target.heap16 = __HEAP16;
+  /** Convenience (and faster) equivalent of this.heapForSize(16,true). */
+  target.heap16u = __HEAP16U;
+  /** Convenience (and faster) equivalent of this.heapForSize(32,false). */
+  target.heap32 = __HEAP32;
+  /** Convenience (and faster) equivalent of this.heapForSize(32,true). */
+  target.heap32u = __HEAP32U;
+  /** Convenience (and faster) equivalent of this.heapForSize(64,false).
+      Throws if BigInt support is not enabled. */
+  target.heap64 = __HEAP64;
+  /** Convenience (and faster) equivalent of this.heapForSize(64,true).
+      Throws if BigInt support is not enabled. */
+  target.heap64u = __HEAP64U;
+  /** Convenience (and faster) equivalent of
+   * this.heapForSize(Float32Array). */
+  target.heap32f = __HEAP32F;
+  /** Convenience (and faster) equivalent of
+   * this.heapForSize(Float64Array). */
+  target.heap64f = __HEAP64F;
 
   /**
      Requires n to be one of:
@@ -7650,38 +7764,33 @@ function WhWasmUtilInstaller(target){
      Throws if passed an invalid n.
   */
   target.heapForSize = function(n,unsigned = true){
-    let ctor;
-    const c = (cache.memory && cache.heapSize === cache.memory.buffer.byteLength)
-          ? cache : heapWrappers();
     switch(n){
-        case Int8Array: return c.HEAP8; case Uint8Array: return c.HEAP8U;
-        case Int16Array: return c.HEAP16; case Uint16Array: return c.HEAP16U;
-        case Int32Array: return c.HEAP32; case Uint32Array: return c.HEAP32U;
-        case 8:  return unsigned ? c.HEAP8U : c.HEAP8;
-        case 16: return unsigned ? c.HEAP16U : c.HEAP16;
-        case 32: return unsigned ? c.HEAP32U : c.HEAP32;
-        case 64:
-          if(c.HEAP64) return unsigned ? c.HEAP64U : c.HEAP64;
-          break;
-        default:
-          if(target.bigIntEnabled){
-            if(n===globalThis['BigUint64Array']) return c.HEAP64U;
-            else if(n===globalThis['BigInt64Array']) return c.HEAP64;
-            break;
-          }
+      case 8:  return unsigned ? __HEAP8U() : __HEAP8();
+      case 16: return unsigned ? __HEAP16U() : __HEAP16();
+      case 32: return unsigned ? __HEAP32U() : __HEAP32();
+      case 64: return unsigned ? __HEAP64U() : __HEAP64();
+      case Int8Array: return __HEAP8();
+      case Uint8Array: return __HEAP8U();
+      case Int16Array: return __HEAP16();
+      case Uint16Array: return __HEAP16U();
+      case Int32Array: return __HEAP32();
+      case Uint32Array: return __HEAP32U();
+      default:
+        if(n===globalThis['BigUint64Array']) return __HEAP64U();
+        else if(n===globalThis['BigInt64Array']) return __HEAP64();
+        else if(n===globalThis['Float32Array']) return __HEAP32F();
+        else if(n===globalThis['Float64Array']) return __HEAP64F();
+        toss("Invalid heapForSize() size: expecting 8, 16, 32,",
+             "or (if BigInt is enabled) 64, or a TypedArray constructor.");
     }
-    toss("Invalid heapForSize() size: expecting 8, 16, 32,",
-         "or (if BigInt is enabled) 64.");
   };
-
-  const __funcTable = target.functionTable;
-  delete target.functionTable;
 
   /**
      Returns the WASM-exported "indirect function table".
   */
-  target.functionTable = __funcTable
-    ? ()=>__funcTable
+  if( !(target.functionTable instanceof Function) ){
+    target.functionTable = target.functionTable
+      ? ((origFuncTable)=>{return ()=>origFuncTable})(target.functionTable)
     : ()=>target.exports.__indirect_function_table
     /** -----------------^^^^^ "seems" to be a standardized export name.
         From Emscripten release notes from 2020-09-10:
@@ -7691,6 +7800,7 @@ function WhWasmUtilInstaller(target){
         We must delay access to target.exports until after the library
         is bootstrapped.
     */;
+  }
 
   /**
      Given a function pointer, returns the WASM function table entry
@@ -7699,7 +7809,7 @@ function WhWasmUtilInstaller(target){
   */
   target.functionEntry = function(fptr){
     const ft = target.functionTable();
-    //console.debug("functionEntry(",arguments,")", __asPtrType(fptr));
+    //debug("functionEntry(",arguments,")", __asPtrType(fptr));
     //-sMEMORY64=1: we get a BigInt fptr and ft.get() wants a BigInt.
     //-sMEMORY64=2: we get a Number fptr and ft.get() wants a Number.
     return fptr < ft.length ? ft.get(__asPtrType(fptr)) : undefined;
@@ -7883,7 +7993,7 @@ function WhWasmUtilInstaller(target){
       /*this will only work if func is a WASM-exported function*/
       ft.set(ptr, func);
       if(scoped){
-        cache.scopedAlloc.pushPtr(ptr);
+        cache.scopedAlloc.pushFuncPtr(ptr);
       }
       return ptr;
     }catch(e){
@@ -7897,7 +8007,7 @@ function WhWasmUtilInstaller(target){
       const fptr = target.jsFuncToWasm(func, sig);
       ft.set(ptr, fptr);
       if(scoped){
-        cache.scopedAlloc.pushPtr(ptr);
+        cache.scopedAlloc.pushFuncPtr(ptr);
       }
     }catch(e){
       if(ptr===oldLen) cache.freeFuncIndexes.push(oldLen);
@@ -8027,38 +8137,27 @@ function WhWasmUtilInstaller(target){
      ACHTUNG #2: ptr may be a BigInt (and generally will be in 64-bit
      builds) but this function must coerce it into a Number in order
      to access the heap's contents. Ergo: BitInts outside of the
-     (extrardinarily genereous) address range exposed to browser-side
+     (extrardinarily generous) address range exposed to browser-side
      WASM may cause misbehavior.
 
      See also: poke()
   */
-  target.peek = function f(ptr, type='i8'){
-    if(type.endsWith('*')) type = __ptrIR;
-    const c = (cache.memory && cache.heapSize === cache.memory.buffer.byteLength)
-          ? cache : heapWrappers();
-    const list = Array.isArray(ptr) ? [] : undefined;
-    let rc;
-    do{
-      if(list) ptr = arguments[0].shift();
-      switch(type){
-          case 'i1':
-          case 'i8': rc = c.HEAP8[Number(ptr/*tag:64bit*/)>>0]; break;
-          case 'i16': rc = c.HEAP16[Number(ptr/*tag:64bit*/)>>1]; break;
-          case 'i32': rc = c.HEAP32[Number(ptr/*tag:64bit*/)>>2]; break;
-          case 'float': case 'f32': rc = c.HEAP32F[Number(ptr/*tag:64bit*/)>>2]; break;
-          case 'double': case 'f64': rc = Number(c.HEAP64F[Number(ptr/*tag:64bit*/)>>3]); break;
-          case 'i64':
-            if(c.HEAP64){
-              rc = __BigInt(c.HEAP64[Number(ptr/*tag:64bit*/)>>3]);
-              break;
-            }
-            /* fallthru */
-          default:
-            toss('Invalid type for peek():',type);
+  target.peek = function(ptr, type = 'i8') {
+    if( type.endsWith('*') ) type = __ptrIR;
+    const heaper = __typeToHeap(type), heap = heaper();
+    if( Array.isArray(ptr) ){
+      const res = new Array(ptr.length);
+      for (let i = 0; i < ptr.length; ++i) {
+        const p = Number(ptr[i]);
+        res[i] = (__HEAP64===heaper)
+          ? __BigInt(heap[p >> heaper.shift])
+          : Number(heap[p >> heaper.shift]);
       }
-      if(list) list.push(rc);
-    }while(list && arguments[0].length);
-    return list || rc;
+      return res;
+    }
+    return (__HEAP64===heaper)
+          ? __BigInt(heap[Number(ptr) >> heaper.shift])
+          : Number(heap[Number(ptr) >> heaper.shift]);
   };
 
   /**
@@ -8080,25 +8179,14 @@ function WhWasmUtilInstaller(target){
   */
   target.poke = function(ptr, value, type='i8'){
     if (type.endsWith('*')) type = __ptrIR;
-    const c = (cache.memory && cache.heapSize === cache.memory.buffer.byteLength)
-          ? cache : heapWrappers();
-    for(const p of (Array.isArray(ptr) ? ptr : [ptr])){
-      switch (type) {
-          case 'i1':
-          case 'i8': c.HEAP8[Number(p/*tag:64bit*/)>>0] = value; continue;
-          case 'i16': c.HEAP16[Number(p/*tag:64bit*/)>>1] = value; continue;
-          case 'i32': c.HEAP32[Number(p/*tag:64bit*/)>>2] = value; continue;
-          case 'float': case 'f32': c.HEAP32F[Number(p/*tag:64bit*/)>>2] = value; continue;
-          case 'double': case 'f64': c.HEAP64F[Number(p/*tag:64bit*/)>>3] = value; continue;
-          case 'i64':
-            if(c.HEAP64){
-              c.HEAP64[Number(p/*tag:64bit*/)>>3] = __BigInt(value);
-              continue;
-            }
-            /* fallthru */
-          default:
-            toss('Invalid type for poke(): ' + type);
+    const heaper = __typeToHeap(type), heap = heaper();
+    if( __HEAP64===heaper && 'bigint'!==typeof value ) value = __BigInt(value);
+    if( Array.isArray(ptr) ){
+      for(const p of (Array.isArray(ptr) ? ptr : [ptr])){
+        heap[Number(ptr/*tag:64bit*/) >> heaper.shift] = value;
       }
+    }else{
+      heap[Number(ptr) >> heaper.shift] = value;
     }
     return this;
   };
@@ -8138,16 +8226,33 @@ function WhWasmUtilInstaller(target){
   /** i16 variant of poke8(). */
   target.poke16 = (ptr, value)=>target.poke(ptr, value, 'i16');
   /** i32 variant of peek8(). */
-  target.peek32 = (...ptr)=>target.peek( (1===ptr.length ? ptr[0] : ptr), 'i32' );
+  target.peek32 = function(ptr){
+    if( 'number' === typeof ptr && 1 === arguments.length ) {
+      /* Fast-path common case. */
+      return __HEAP32()[ptr >> 2];
+    }
+    return target.peek(1 === arguments.length
+                       ? ptr
+                       : Array.from(arguments), 'i32');
+  };
   /** i32 variant of poke8(). */
-  target.poke32 = (ptr, value)=>target.poke(ptr, value, 'i32');
+  target.poke32 = (ptr, value)=>{
+    /* Fast-path common case. */
+    if( 'number' === typeof ptr ){
+      __HEAP32()[ptr >> 2] = value;
+      return target;
+    }
+    return target.poke(ptr, value, 'i32');
+  };
   /** i64 variant of peek8(). Will throw if this build is not
       configured for BigInt support. */
-  target.peek64 = (...ptr)=>target.peek( (1===ptr.length ? ptr[0] : ptr), 'i64' );
+  target.peek64 = (ptr)=>target.peek( (1===ptr.length ? ptr[0] : ptr), 'i64' );
+
   /** i64 variant of poke8(). Will throw if this build is not
       configured for BigInt support. Note that this returns
       a BigInt-type value, not a Number-type value. */
   target.poke64 = (ptr, value)=>target.poke(ptr, value, 'i64');
+
   /** f32 variant of peek8(). */
   target.peek32f = (...ptr)=>target.peek( (1===ptr.length ? ptr[0] : ptr), 'f32' );
   /** f32 variant of poke8(). */
@@ -8167,8 +8272,8 @@ function WhWasmUtilInstaller(target){
   target.setPtrValue = target.pokePtr;
 
   /**
-     Returns true if the given value appears to be legal for use as
-     a WASM pointer value. Its _range_ of values is not (cannot be)
+     Returns true if the given value appears to be legal for use as a
+     WASM pointer value. Its _range_ of values is not (cannot be)
      validated except to ensure that it is a 32-bit integer with a
      value of 0 or greater. Likewise, it cannot verify whether the
      value actually refers to allocated memory in the WASM heap.
@@ -8179,7 +8284,7 @@ function WhWasmUtilInstaller(target){
      integer arguments.
   */
   target.isPtr32 = (ptr)=>(
-    'number'===typeof ptr && ptr>=0 && ptr===(ptr|0)
+    'number'===typeof ptr && ptr===(ptr>>>0)
   );
 
   /** 64-bit counterpart of isPtr32() and falls back to that function
@@ -8199,16 +8304,14 @@ function WhWasmUtilInstaller(target){
      refers to a NUL-terminated C-style string encoded as UTF-8.
      Returns the length, in bytes, of the string, as for `strlen(3)`.
      As a special case, if !ptr or if it's not a pointer then it
-     returns `null`. Throws if ptr is out of range for
-     target.heap8u().
+     returns `null`. Results are undefined if no NUL is found. Throws
+     if ptr is out of range for target.heap8u().
   */
   target.cstrlen = function(ptr){
-    if(!ptr || !target.isPtr/*64*/(ptr)) return null;
-    ptr = Number(ptr) /*tag:64bit*/;
-    const h = heapWrappers().HEAP8U;
-    let pos = ptr;
-    for( ; h[pos] !== 0; ++pos ){}
-    return pos - ptr;
+    if(!ptr || !target.isPtr(ptr)) return null;
+    ptr = Number(ptr);
+    const end = __HEAP8U().indexOf(0, ptr);
+    return end < 0 ? null : end - ptr;
   };
 
   /** Internal helper to use in operations which need to distinguish
@@ -8275,7 +8378,7 @@ function WhWasmUtilInstaller(target){
   target.cstrToJs = function(ptr){
     const n = target.cstrlen(ptr);
     return n
-      ? typedArrayToString(heapWrappers().HEAP8U, Number(ptr), Number(ptr)+n)
+      ? typedArrayToString(__HEAP8U(), Number(ptr), Number(ptr)+n)
       : (null===n ? n : "");
   };
 
@@ -8409,7 +8512,7 @@ function WhWasmUtilInstaller(target){
     if(!tgtPtr || !srcPtr) toss("cstrncpy() does not accept NULL strings.");
     if(n<0) n = target.cstrlen(strPtr)+1;
     else if(!(n>0)) return 0;
-    const heap = target.heap8u();
+    const heap = __HEAP8U();
     let i = 0, ch;
     const tgtNumber = Number(tgtPtr), srcNumber = Number(srcPtr)/*tag:64bit*/;
     for(; i < n && (ch = heap[srcNumber+i]); ++i){
@@ -8443,7 +8546,7 @@ function WhWasmUtilInstaller(target){
           ptr = allocator(u.length+1);
     let toFree = ptr;
     try{
-      const heap = heapWrappers().HEAP8U;
+      const heap = __HEAP8U();
       heap.set(u, Number(ptr));
       heap[__ptrAdd(ptr, u.length)] = 0;
       toFree = __NullPtr;
@@ -8505,7 +8608,7 @@ function WhWasmUtilInstaller(target){
    */
   target.scopedAllocPush = function(){
     __affirmAlloc(target, 'scopedAllocPush');
-    const a = [];
+    const a = nu({ptr:[], func:[]});
     cache.scopedAlloc.push(a);
     return a;
   };
@@ -8539,17 +8642,17 @@ function WhWasmUtilInstaller(target){
     const n = arguments.length
           ? cache.scopedAlloc.indexOf(state)
           : cache.scopedAlloc.length-1;
-    if(n<0) toss("Invalid state object for scopedAllocPop().");
-    if(0===arguments.length) state = cache.scopedAlloc[n];
-    cache.scopedAlloc.splice(n,1);
-    for(let p; (p = state.pop()); ){
-      if(target.functionEntry(p)){
-        //console.warn("scopedAllocPop() uninstalling function",p);
-        target.uninstallFunction(p);
-      }else{
-        target.dealloc(p);
-      }
+    if(n<0) toss('Invalid state object for scopedAllocPop().');
+    if(0 === arguments.length) state = cache.scopedAlloc[n];
+    cache.scopedAlloc.splice(n, 1);
+    let li = state.func;
+    while( li.length ){
+      try{target.uninstallFunction(li.pop())}
+      catch(e){/*ignored*/}
     }
+    li = state.ptr;
+    while( li.length ) target.dealloc(li.pop());
+    state.ptr = state.func = null;
   };
 
   /**
@@ -8870,6 +8973,12 @@ function WhWasmUtilInstaller(target){
      Internal-use-only base class for FuncPtrAdapter and potentially
      additional stateful argument adapter classes.
 
+     By "internal" we mean "within the sqlite project" (where this
+     code originated and where it continues to serve). That is: this
+     API exists to suit that project's internal needs, with no
+     consideration for its use elsewhere. Client-level code must not
+     rely on this interface.
+
      Its main interface (convertArg()) is strictly internal, not to be
      exposed to client code, as it may still need re-shaping. Only the
      constructors of concrete subclasses should be exposed to clients,
@@ -8899,7 +9008,7 @@ function WhWasmUtilInstaller(target){
        and that context invariably lies in the LHS arguments of v.
        Examples of how this is useful can be found in FuncPtrAdapter.
     */
-    convertArg(v,argv,argIndex){
+    convertArg(/*v,argv,argIndex*/){
       toss("AbstractArgAdapter must be subclassed.");
     }
   };
@@ -9019,9 +9128,9 @@ function WhWasmUtilInstaller(target){
     constructor(opt) {
       super(opt);
       if(xArg.FuncPtrAdapter.warnOnUse){
-        console.warn('xArg.FuncPtrAdapter is an internal-only API',
-                     'and is not intended to be invoked from',
-                     'client-level code. Invoked with:',opt);
+        warn('xArg.FuncPtrAdapter is an internal-only API',
+             'and is not intended to be invoked from',
+             'client-level code. It was invoked with:',opt);
       }
       this.name = opt.name || "unnamed";
       this.signature = opt.signature;
@@ -9039,7 +9148,7 @@ function WhWasmUtilInstaller(target){
       this.isContext = 'context'===this.bindScope;
       this.isPermanent = 'permanent'===this.bindScope;
       this.singleton = ('singleton'===this.bindScope) ? [] : undefined;
-      //console.warn("FuncPtrAdapter()",opt,this);
+      //warn("FuncPtrAdapter()",opt,this);
       this.callProxy = (opt.callProxy instanceof Function)
         ? opt.callProxy : undefined;
     }
@@ -9051,7 +9160,7 @@ function WhWasmUtilInstaller(target){
     */
 
     /* Dummy impl. Overwritten per-instance as needed. */
-    contextKey(argv,argIndex){
+    contextKey(/*argv,argIndex*/){
       return this;
     }
 
@@ -9137,7 +9246,7 @@ function WhWasmUtilInstaller(target){
                  function. We're relying very much here on xWrap()
                  having pushed an alloc scope.
               */
-              cache.scopedAlloc.pushPtr(pair[1]);
+              cache.scopedAlloc.pushFuncPtr(pair[1]);
             }
             catch(e){/*ignored*/}
           }
@@ -9152,7 +9261,7 @@ function WhWasmUtilInstaller(target){
             FuncPtrAdapter.debugOut("FuncPtrAdapter uninstalling", this,
                                     this.contextKey(argv,argIndex), '@'+pair[1], v);
           }
-          try{cache.scopedAlloc.pushPtr(pair[1]);/*see notes above*/}
+          try{cache.scopedAlloc.pushFuncPtr(pair[1]);/*see notes above*/}
           catch(e){/*ignored*/}
           pair[0] = pair[1] = (v || __NullPtr);
         }
@@ -9175,13 +9284,13 @@ function WhWasmUtilInstaller(target){
   xArg.FuncPtrAdapter.warnOnUse = false;
 
   /** If true, convertArg() will call FuncPtrAdapter.debugOut() when
-      it (un)installs a function binding to/from WASM. Note that
-      deinstallation of bindScope=transient bindings happens via
-      scopedAllocPop() so will not be output. */
+      it (un)installs a function binding to/from WASM. Deinstallation
+      of bindScope=transient bindings happens via scopedAllocPop() so
+      will not be output. */
   xArg.FuncPtrAdapter.debugFuncInstall = false;
 
   /** Function used for debug output. */
-  xArg.FuncPtrAdapter.debugOut = console.debug.bind(console);
+  xArg.FuncPtrAdapter.debugOut = debug;
 
   /**
      List of legal values for the FuncPtrAdapter bindScope config
@@ -9204,12 +9313,18 @@ function WhWasmUtilInstaller(target){
      passing in all remaining arguments, and returns the result.
      Throws if t is not mapped to an argument converter.
   */
-  cache.xWrap.convertArg = (t,...args)=>__xArgAdapterCheck(t)(...args);
+  cache.xWrap.convertArg =
+    (t, v, argv, argIndex)=> __xArgAdapterCheck(t)(v, argv, argIndex);
   /**
      Identical to convertArg() except that it does not perform
      an is-defined check on the mapping to t before invoking it.
   */
-  cache.xWrap.convertArgNoCheck = (t,...args)=>xArg.get(t)(...args);
+  cache.xWrap.convertArgNoCheck =
+    (t, v, argv, argIndex)=> xArg.get(t)(v, argv, argIndex);
+
+  /* Internal code de-duplifier. True if xWrap type id t is
+     null or 'null'. */
+  const __typeIsNull = (t)=>(null===t || 'null'===t);
 
   /**
      Fetches the xWrap() result adapter mapped to t, calls it, passing
@@ -9217,13 +9332,13 @@ function WhWasmUtilInstaller(target){
      argument converter.
   */
   cache.xWrap.convertResult =
-    (t,v)=>(null===t ? v : (t ? __xResultAdapterCheck(t)(v) : undefined));
+    (t,v)=>(__typeIsNull(t) ? v : (t ? __xResultAdapterCheck(t)(v) : undefined));
   /**
      Identical to convertResult() except that it does not perform an
      is-defined check on the mapping to t before invoking it.
   */
   cache.xWrap.convertResultNoCheck =
-    (t,v)=>(null===t ? v : (t ? xResult.get(t)(v) : undefined));
+    (t,v)=>(__typeIsNull(t) ? v : (t ? xResult.get(t)(v) : undefined));
 
   /**
      Creates a wrapper for another function which converts the arguments
@@ -9410,16 +9525,19 @@ function WhWasmUtilInstaller(target){
     const fIsFunc = (fArg instanceof Function);
     const xf = fIsFunc ? fArg : target.xGet(fArg);
     if(fIsFunc) fArg = xf.name || 'unnamed function';
-    if(argTypes.length!==xf.length) __argcMismatch(fArg, xf.length);
-    if( 0===xf.length
-        && (null===resultType || 'null'===resultType) ){
+    if(argTypes.length!==xf.length){
+      __argcMismatch(fArg, xf.length) /* throws */;
+    }
+    if( 0===xf.length && __typeIsNull(resultType) ){
       /* Func taking no args with an as-is return. We don't need a wrapper. */
       return xf;
     }
     /*Verify the arg type conversions are valid...*/;
     __xResultAdapterCheck(resultType);
     for(const t of argTypes){
-      if(t instanceof AbstractArgAdapter) xArg.set(t, (...args)=>t.convertArg(...args));
+      if(t instanceof AbstractArgAdapter){
+        xArg.set(t, (v, argv, argIndex)=> t.convertArg(v, argv, argIndex));
+      }
       else __xArgAdapterCheck(t);
     }
     const cxw = cache.xWrap;
@@ -9429,10 +9547,19 @@ function WhWasmUtilInstaller(target){
                          ? __argcMismatch(fArg, xf.length)
                          : cxw.convertResult(resultType, xf.call(null)));
     }
-    return function(...args){
-      if(args.length!==xf.length) __argcMismatch(fArg, xf.length);
+    const resConverter =
+          /* Result conversion: null/'null'==> do nothing,
+             undefined==>void, else do the installed conversion */
+          __typeIsNull(resultType)
+          ? null
+          : (resultType
+             ? __xResultAdapterCheck(resultType)
+             : undefined);
+
+    return function(...args) {
+      if( args.length !== xf.length ) __argcMismatch(fArg, xf.length);
       const scope = target.scopedAllocPush();
-      try{
+      try {
         /*
           Maintenance reminder re. arguments passed to convertArg():
           The public interface of argument adapters is that they take
@@ -9456,15 +9583,19 @@ function WhWasmUtilInstaller(target){
         */
         let i = 0;
         if( callee.debug ){
-          console.debug("xWrap() preparing: resultType ",resultType, 'xf',xf,"argTypes",argTypes,"args",args);
+          debug('xWrap() preparing: resultType ', resultType,
+                'xf', xf,
+                'argTypes', argTypes, 'args', args);
         }
-        for(; i < args.length; ++i) args[i] = cxw.convertArgNoCheck(
-          argTypes[i], args[i], args, i
-        );
+        for(; i < args.length; ++i){
+          args[i] = cxw.convertArgNoCheck(argTypes[i], args[i], args, i);
+        }
         if( callee.debug ){
-          console.debug("xWrap() calling: resultType ",resultType, 'xf',xf,"argTypes",argTypes,"args",args);
+          debug('xWrap() calling: resultType ', resultType,
+                'xf', xf,'argTypes', argTypes, 'args', args);
         }
-        return cxw.convertResultNoCheck(resultType, xf.apply(null,args));
+        const rawRes = xf.apply(null, args);
+        return resConverter ? resConverter(rawRes) : rawRes;
       }finally{
         target.scopedAllocPop(scope);
       }
@@ -9630,109 +9761,6 @@ function WhWasmUtilInstaller(target){
 };
 
 /**
-   yawl (Yet Another Wasm Loader) provides very basic wasm loader.
-   It requires a config object:
-
-   - `uri`: required URI of the WASM file to load.
-
-   - `onload(loadResult)`: optional callback. Its argument is an
-     object described in more detail below.
-
-   - `imports`: optional imports object for
-     WebAssembly.instantiate[Streaming]().  The default is an empty
-     set of imports. If the module requires any imports, this object
-     must include them.
-
-   - `wasmUtilTarget`: optional object suitable for passing to
-     WhWasmUtilInstaller(). If set, it gets passed to that function
-     before the returned promise resolves. This function sets several
-     properties on it before passing it on to that function (which
-     sets many more):
-
-     - `module`, `instance`: the properties from the
-       instantiate[Streaming]() result.
-
-     - If `instance.exports.memory` is _not_ set then it requires that
-       `config.imports.env.memory` be set (else it throws), and
-       assigns that to `wasmUtilTarget.memory`.
-
-     - If `wasmUtilTarget.alloc` is not set and
-       `instance.exports.malloc` is, it installs
-       `wasmUtilTarget.alloc()` and `wasmUtilTarget.dealloc()`
-       wrappers for the exports' `malloc` and `free` functions
-       if exports.malloc exists.
-
-   It returns a function which, when called, initiates loading of the
-   module and returns a Promise. When that Promise resolves, it calls
-   the `config.onload` callback (if set) and passes it `(loadResult)`,
-   where `loadResult` is derived from the result of
-   WebAssembly.instantiate[Streaming](), an object in the form:
-
-   ```
-   {
-     module: a WebAssembly.Module,
-     instance: a WebAssembly.Instance,
-     config: the config arg to this function
-   }
-   ```
-
-   (The initial `then()` attached to the promise gets only that
-   object, and not the `config` object, thus the potential need for a
-   `config.onload` handler.)
-
-   Error handling is up to the caller, who may attach a `catch()` call
-   to the promise.
-*/
-globalThis.WhWasmUtilInstaller
-.yawl = function yawl(config){
-  'use strict';
-  const wfetch = ()=>fetch(config.uri, {credentials: 'same-origin'});
-  const wui = this;
-  const finalThen = function(arg){
-    //log("finalThen()",arg);
-    if(config.wasmUtilTarget){
-      const toss = (...args)=>{throw new Error(args.join(' '))};
-      const tgt = config.wasmUtilTarget;
-      tgt.module = arg.module;
-      tgt.instance = arg.instance;
-      //tgt.exports = tgt.instance.exports;
-      if(!tgt.instance.exports.memory){
-        /**
-           WhWasmUtilInstaller requires either tgt.exports.memory
-           (exported from WASM) or tgt.memory (JS-provided memory
-           imported into WASM).
-        */
-        tgt.memory = config?.imports?.env?.memory
-          || toss("Missing 'memory' object!");
-      }
-      if(!tgt.alloc && arg.instance.exports.malloc){
-        const exports = arg.instance.exports;
-        tgt.alloc = function(n){
-          return exports.malloc(n) || toss("Allocation of",n,"bytes failed.");
-        };
-        tgt.dealloc = function(m){m && exports.free(m)};
-      }
-      wui(tgt);
-    }
-    arg.config = config;
-    if(config.onload) config.onload(arg);
-    return arg /* for any then() handler attached to
-                  yetAnotherWasmLoader()'s return value */;
-  };
-  const loadWasm = WebAssembly.instantiateStreaming
-        ? ()=>WebAssembly
-        .instantiateStreaming(wfetch(), config.imports||{})
-        .then(finalThen)
-        : ()=> wfetch()// Safari < v15
-        .then(response => response.arrayBuffer())
-        .then(bytes => WebAssembly.instantiate(bytes, config.imports||{}))
-        .then(finalThen)
-  ;
-  return loadWasm;
-}.bind(
-globalThis.WhWasmUtilInstaller
-)/*yawl()*/;
-/**
   2022-06-30
 
   The author disclaims copyright to this source code.  In place of a
@@ -9753,59 +9781,59 @@ globalThis.WhWasmUtilInstaller
 
   This build was generated using:
 
-  ./c-pp -o js/jaccwabyt.js -@policy=error jaccwabyt/jaccwabyt.c-pp.js
+  ./c-pp -o ./bld/sqlite3-api.bundler.js -@policy=error -Dtarget:es6-module -Dtarget:es6-bundler-friendly ./bld/sqlite3-license-version.js api/sqlite3-api-prologue.c-pp.js ./bld/sqlite3-api-build-version.js common/whwasmutil.c-pp.js jaccwabyt/jaccwabyt.c-pp.js api/sqlite3-api-glue.c-pp.js api/sqlite3-api-oo1.c-pp.js api/sqlite3-api-worker1.c-pp.js api/sqlite3-vfs-helper.c-pp.js api/sqlite3-vtab-helper.c-pp.js api/sqlite3-vfs-kvvfs.c-pp.js api/opfs-common-shared.c-pp.js api/sqlite3-vfs-opfs.c-pp.js api/sqlite3-vfs-opfs-sahpool.c-pp.js api/sqlite3-vfs-opfs-wl.c-pp.js
 
-  by libcmpp 2.0.x 4539e17f451054d2aeb6a5ffe3891af087fd8fa6cfae4e31d02e1fddfec69d46 @ 2026-09-30 09:12:44.230 UTC
+  by libcmpp 2.0.x 8d8c04a3fafae2f13182be91e517a5a7d0a2d93da3232d7b0fbaeaff2f2e5b09 @ 2026-11-14 20:55:04.664 UTC
 */
-'use strict';
-globalThis.Jaccwabyt =
-function StructBinderFactory(config){
-  'use strict';
-/* ^^^^ it is recommended that clients move that object into wherever
-   they'd like to have it and delete the globalThis-held copy.  This
-   API does not require the global reference - it is simply installed
-   as a convenience for connecting these bits to other co-developed
-   code before it gets removed from the global namespace.
-*/
+const Jaccwabyt = function StructBinderFactory(config){
 
-  /** Throws a new Error, the message of which is the concatenation
-      all args with a space between each. */
-  const toss = (...args)=>{throw new Error(args.join(' '))};
-
+  const LOGPREFIX = 'jaccwabyt/jaccwabyt.c-pp.js:';
+  /** Throws a new Error, the message of which is the concatenation of
+      a file-local prefix and all args with a space between each. */
+  const toss = (...args)=>{
+    throw new Error(LOGPREFIX+" "+args.join(' '))
+  };
+  const nu = (...args)=>Object.assign(Object.create(null),...args);
+  config = nu(config);
+  for(const k of ['alloc','dealloc']){
+    if( !(config[k] instanceof Function) ){
+      toss("Config option '"+k+"' must be a function.");
+    }
+  }
+  const error = config.logger?.error
+        || ((...args)=>console.error(LOGPREFIX,...args));
   {
     let h = config.heap;
     if( h instanceof WebAssembly.Memory ){
-      h = function(){return new Uint8Array(this.buffer)}.bind(h);
-    }else if( !(h instanceof Function) ){
-      //console.warn("The bothersome StructBinderFactory config:",config);
+      let u;
+      config.heap = function(){
+        /* Update view when the heap grows. */
+        if( u?.length===this.byteLength ) return u;
+        return u = new Uint8Array(this.buffer);
+      }.bind(config.heap);
+    }else if( 1!==h?.()?.BYTES_PER_ELEMENT ){
+      error("The bothersome StructBinderFactory config:",config,
+            "heap =",h?.());
       toss("config.heap must be WebAssembly.Memory instance or",
-           "a function which returns one.");
+           "a function which returns a Uint8Array/Int8Array view of one.");
     }
-    config.heap = h;
   }
-  ['alloc','dealloc'].forEach(function(k){
-    (config[k] instanceof Function) ||
-      toss("Config option '"+k+"' must be a function.");
-  });
   const SBF = StructBinderFactory;
   const heap = config.heap,
         alloc = config.alloc,
         dealloc = config.dealloc,
-        realloc = (config.realloc || function(){
-          toss("This StructBinderFactory was configured without realloc()");
-          /* We can't know the original memory's size from here unless
-             we internally proxy alloc()/dealloc() to track all
-             pointers (not going to happen), so we can't fall back to
-             doing alloc()/copy/dealloc(). */
-        }),
-        log = config.log || console.debug.bind(console),
+        log = config.log/*deprecated*/
+          || config.logger?.debug
+          || ((...args)=>console.debug(LOGPREFIX,...args)),
+        warn = config.logger?.warn
+          || ((...args)=>console.warn(LOGPREFIX,...args)),
         memberPrefix = (config.memberPrefix || ""),
         memberSuffix = (config.memberSuffix || ""),
         BigInt = globalThis['BigInt'],
         BigInt64Array = globalThis['BigInt64Array'],
         bigIntEnabled = config.bigIntEnabled ?? !!BigInt64Array;
 
-  //console.warn("config",config);
+  //warn("config",config);
   let ptr;
   const ptrSize = config.pointerSize
         || config.ptrSize/*deprecated*/
@@ -9817,7 +9845,7 @@ function StructBinderFactory(config){
     dealloc(ptr);
     ptr = undefined;
   }
-  //console.warn("ptrIR =",ptrIR,"ptrSize =",ptrSize);
+  //warn("ptrIR =",ptrIR,"ptrSize =",ptrSize);
 
   if(ptrSize!==4 && ptrSize!==8) toss("Invalid pointer size:",ptrSize);
   if(ptrIR!=='i32' && ptrIR!=='i64') toss("Invalid pointer representation:",ptrIR);
@@ -9829,27 +9857,21 @@ function StructBinderFactory(config){
         : (v)=>toss("BigInt support is disabled in this build.");
   const __asPtrType = ('i32'==ptrIR) ? Number : __BigInt;
   const __NullPtr = __asPtrType(0);
-
-  /**
-     Expects any number of numeric arguments, each one of either type
-     Number or BigInt. It sums them up (from an implicit starting
-     point of 0 or 0n) and returns them as a number of the same type
-     which target.asPtrType() uses.
-
-     This is a workaround for not being able to mix Number/BigInt in
-     addition/subtraction expressions (which we frequently need for
-     calculating pointer offsets).
-  */
-  const __ptrAdd = function(...args){
-    let rc = __NullPtr;
-    for( let i = 0; i < args.length; ++i ){
-      rc += __asPtrType(args[i]);
-    }
-    return rc;
-  };
-
-  const __ptrAddSelf = function(...args){
-    return __ptrAdd(this.pointer,...args);
+  const __ptrAdd = (4 === ptrSize)
+        ? function(a, b){
+          if(2 === arguments.length) return (Number(a || 0) + Number(b || 0)) | 0;
+          let rc = 0;
+          for(let i = 0; i < arguments.length; ++i) rc += Number(arguments[i] || 0);
+          return rc | 0;
+        }
+        : function(a, b){
+          if(2 === arguments.length) return BigInt(a || 0) + BigInt(b || 0);
+          let rc = 0n;
+          for(let i = 0; i < arguments.length; ++i) rc += BigInt(arguments[i] || 0);
+          return rc;
+        };
+  const __ptrAddSelf = function(){
+    return __ptrAdd(this.pointer,...arguments);
   };
 
   if(!SBF.debugFlags){
@@ -9894,7 +9916,7 @@ function StructBinderFactory(config){
      StructType: a struct-wrapping class generated by this
      framework.
 
-     DEF: struct description object.
+     DEF: struct descriptor object.
 
      SIG: struct member signature string.
   */
@@ -9943,19 +9965,16 @@ function StructBinderFactory(config){
       to the given SIG. */
   const sigDVGetter = function(s){
     switch(sigLetter(s)) {
-        case 'p': case 'P': case 's': {
-          switch(ptrSize){
-              case 4: return 'getInt32';
-              case 8: return affirmBigIntArray() && 'getBigInt64';
-          }
-          break;
-        }
-        case 'i': return 'getInt32';
-        case 'c': return 'getInt8';
-        case 'C': return 'getUint8';
-        case 'j': return affirmBigIntArray() && 'getBigInt64';
-        case 'f': return 'getFloat32';
-        case 'd': return 'getFloat64';
+      case 'p': case 'P': case 's':
+        return 4===ptrSize
+          ? 'getInt32'
+          : (affirmBigIntArray() && 'getBigInt64');
+      case 'i': return 'getInt32';
+      case 'c': return 'getInt8';
+      case 'C': return 'getUint8';
+      case 'j': return affirmBigIntArray() && 'getBigInt64';
+      case 'f': return 'getFloat32';
+      case 'd': return 'getFloat64';
     }
     toss("Unhandled DataView getter for signature:",s);
   };
@@ -9964,19 +9983,16 @@ function StructBinderFactory(config){
       to the given SIG. */
   const sigDVSetter = function(s){
     switch(sigLetter(s)){
-        case 'p': case 'P': case 's': {
-          switch(ptrSize){
-              case 4: return 'setInt32';
-              case 8: return affirmBigIntArray() && 'setBigInt64';
-          }
-          break;
-        }
-        case 'i': return 'setInt32';
-        case 'c': return 'setInt8';
-        case 'C': return 'setUint8';
-        case 'j': return affirmBigIntArray() && 'setBigInt64';
-        case 'f': return 'setFloat32';
-        case 'd': return 'setFloat64';
+      case 'p': case 'P': case 's':
+        return 4===ptrSize
+          ? 'setInt32'
+          : (affirmBigIntArray() && 'setBigInt64');
+      case 'i': return 'setInt32';
+      case 'c': return 'setInt8';
+      case 'C': return 'setUint8';
+      case 'j': return affirmBigIntArray() && 'setBigInt64';
+      case 'f': return 'setFloat32';
+      case 'd': return 'setFloat64';
     }
     toss("Unhandled DataView setter for signature:",s);
   };
@@ -10034,13 +10050,18 @@ function StructBinderFactory(config){
   };
   getInstanceHandle.map = new WeakMap;
   getInstanceHandle.create = (forObj)=>{
-    return Object.assign(Object.create(null),{
+    return nu({
       o: forObj,
       p: undefined/*native ptr*/,
       ownsPointer: false,
       zod: false/*zeroOnDispose*/,
       xb: 0/*extraBytes*/
     });
+  };
+
+  const __objOwnsOwnMemory = (v)=>{
+    const ii = getInstanceHandle(v, false);
+    return !!(ii?.p && ii?.ownsPointer);
   };
 
   /**
@@ -10070,7 +10091,7 @@ function StructBinderFactory(config){
     if( !ii || ii.isDisposing ) return;
     ii.isDisposing = true;
     if( !m && !(m = ii.p) ){
-      console.warn("Cannot(?) happen: __freeStruct() found no instanceInfo");
+      error("Cannot(?) happen: __freeStruct() found no instanceInfo");
       return;
     }
     if(Array.isArray(obj.ondispose)){
@@ -10083,22 +10104,22 @@ function StructBinderFactory(config){
           // else ignore. Strings are permitted to annotate entries
           // to assist in debugging.
         }catch(e){
-          console.warn("ondispose() for",ctor.structName,'@',
-                       m,'threw. NOT propagating it.',e);
+          warn("ondispose() for",ctor.structName,'@',
+               m,'threw. NOT propagating it.',e);
         }
       }
     }else if(obj.ondispose instanceof Function){
       try{obj.ondispose()}
       catch(e){
         /*do not rethrow: destructors must not throw*/
-        console.warn("ondispose() for",ctor.structName,'@',
-                     m,'threw. NOT propagating it.',e);
+        warn("ondispose() for",ctor.structName,'@',
+             m,'threw. NOT propagating it.',e);
       }
     }
     rmInstanceHandle(obj);
     delete obj.ondispose;
     if(ctor.debugFlags.__flags.dealloc){
-      log("debug.dealloc:",(ii.ownsPointer?"":"EXTERNAL"),
+      log("debug.dealloc:"+(ii.ownsPointer?"":" EXTERNAL"),
           ctor.structName,"instance:",
           ctor.structInfo.sizeof,"bytes @"+m);
     }
@@ -10114,7 +10135,7 @@ function StructBinderFactory(config){
   /** Returns a skeleton for a read-only, non-iterable property
    * descriptor. */
   const rop0 = ()=>{return {configurable: false, writable: false,
-                            iterable: false}};
+                            iterable: true}};
 
   /** Returns a skeleton for a read-only property accessor wrapping
       value v. */
@@ -10134,10 +10155,10 @@ function StructBinderFactory(config){
         xm = opt?.wrap;
       }else{
         checkPtr(xm);
-        opt = {wrap: xm};
+        opt = nu({wrap: xm});
       }
     }else{
-      opt = {}
+      opt = Object.create(null);
     }
 
     const fill = !xm /* true if we need to zero the memory */;
@@ -10192,30 +10213,43 @@ function StructBinderFactory(config){
     return f.rxSig1.test(sig) || f.rxSig2.test(sig);
   };
 
-  /** Returns a pair of adaptor maps (objects) in a length-3
-      array specific to the given object. */
-  const __adaptorsFor = function(who){
+
+  /**
+     Returns a pair of adaptor maps (objects) in a length-3 array
+     specific to the given object.
+  */
+  const __adaptorsFor = function(who, createIfNeeded=true){
     let x = this.get(who);
-    if( !x ){
-      x = [ Object.create(null), Object.create(null), Object.create(null) ];
+    if( !x && createIfNeeded ){
+      x = [ Object.create(null)/*0=getter*/,
+            Object.create(null)/*1=setter*/,
+            Object.create(null)/*2=struct*/ ];
       this.set(who, x);
     }
     return x;
   }.bind(new WeakMap);
 
-  /** Code de-duplifier for __adaptGet(), __adaptSet(), and
-      __adaptStruct(). */
+  /** Code de-duplifier for __adaptGetter(), __adaptSetter(), and
+      __adaptStruct():
+
+      If passed 3 args: returns adaptors[key].
+
+      If proxy is truthy, assigns that to adaptors[key] and returns it.
+
+      Else removes adaptors[key]. i.e. pass a falsy proxy to unset the
+      proxy.
+  */
   const __adaptor = function(who, which, key, proxy){
     const a = __adaptorsFor(who)[which];
-    if(3===arguments.length) return a[key];
-    if( proxy ) return a[key] = proxy;
-    return delete a[key];
+    if(3===arguments.length) return a[key] /* getter */;
+    if( proxy ) return a[key] = proxy      /* setter */;
+    return delete a[key]                   /* remover */;
   };
 
   const noopAdapter = (x)=>x;
 
-  // StructBinder::adaptGet()
-  const __adaptGet = function(key, ...args){
+  // StructBinder::adaptGetter()
+  const __adaptGetter = function(key, ...args){
     return __adaptor(this, 0, key, ...args);
   };
 
@@ -10224,8 +10258,8 @@ function StructBinderFactory(config){
       toss(ctx,"(",key,") collides with a data type signature.");
   };
 
-  // StructBinder::adaptSet()
-  const __adaptSet = function(key, ...args){
+  // StructBinder::adaptSetter()
+  const __adaptSetter = function(key, ...args){
     __affirmNotASig('Setter adaptor',key);
     return __adaptor(this, 1, key, ...args);
   };
@@ -10239,7 +10273,7 @@ function StructBinderFactory(config){
   /**
      An internal counterpart of __adaptStruct().  If key is-a string,
      uses __adaptor(who) to fetch the struct-adaptor entry for key,
-     else key is assumed to be a struct description object. If it
+     else key is assumed to be a struct descriptor object. If it
      resolves to an object, that's returned, else an exception is
      thrown.
   */
@@ -10247,6 +10281,7 @@ function StructBinderFactory(config){
     const si = ('string'===typeof key)
           ? __adaptor(who, 2, key) : key;
     if( 'object'!==typeof si ){
+      warn('adaptStruct2(',who,key,')', si);
       toss("Invalid struct mapping object. Arg =",key,JSON.stringify(si));
     }
     return si;
@@ -10254,7 +10289,7 @@ function StructBinderFactory(config){
 
   const __memberKey = (k)=>memberPrefix + k + memberSuffix;
   const __memberKeyProp = rop(__memberKey);
-  //const __adaptGetProp = rop(__adaptGet);
+  //const __adaptGetterProp = rop(__adaptGetter);
 
   /**
      Looks up a struct member in structInfo.members. Throws if found
@@ -10283,11 +10318,8 @@ function StructBinderFactory(config){
      throwing if not found. Returns its signature, either in this
      framework's native format or in Emscripten format.
   */
-  const __memberSignature = function f(obj,memberName,emscriptenFormat=false){
-    if(!f._) f._ = (x)=>x.replace(/[^vipPsjrdcC]/g,"").replace(/[pPscC]/g,'i');
-    const m = __lookupMember(obj.structInfo, memberName, true);
-    return emscriptenFormat ? f._(m.signature) : m.signature;
-  };
+  const __memberSignature = (obj,memberName,tossIfNotFNotFound=true)=>
+    __lookupMember(obj.structInfo, memberName, tossIfNotFNotFound)?.signature;
 
   /** Impl of X.memberKeys() for StructType and struct ctors. */
   const __structMemberKeys = rop(function(){
@@ -10298,23 +10330,23 @@ function StructBinderFactory(config){
     return a;
   });
 
-  const __utf8Decoder = new TextDecoder('utf-8');
+  const __utf8Decoder = new TextDecoder();
   const __utf8Encoder = new TextEncoder();
   /** Internal helper to use in operations which need to distinguish
       between SharedArrayBuffer heap memory and non-shared heap. */
   const __SAB = ('undefined'===typeof SharedArrayBuffer)
         ? function(){} : SharedArrayBuffer;
-  const __utf8Decode = function(arrayBuffer, begin, end){
+  const __maybeSlice = (typedArray, begin, end)=>{
     if( 8===ptrSize ){
       begin = Number(begin);
       end = Number(end);
     }
-    return __utf8Decoder.decode(
-      (arrayBuffer.buffer instanceof __SAB)
-        ? arrayBuffer.slice(begin, end)
-        : arrayBuffer.subarray(begin, end)
-    );
+    return (typedArray.buffer instanceof __SAB)
+      ? typedArray.slice(begin, end)
+      : typedArray.subarray(begin, end);
   };
+  const __utf8Decode = (typedArray, begin, end)=>
+        __utf8Decoder.decode(__maybeSlice(typedArray, begin, end));
 
   /**
      Uses __lookupMember() to find the given obj.structInfo key.
@@ -10451,13 +10483,17 @@ function StructBinderFactory(config){
     }),
     memberKey: __memberKeyProp,
     memberKeys: __structMemberKeys,
-    memberSignature: rop(function(memberName, emscriptenFormat=false){
-      return __memberSignature(this, memberName, emscriptenFormat);
+    memberSignature: rop(function(memberName, tossIfNotFNotFound=true){
+      return __memberSignature(this, memberName, tossIfNotFNotFound);
     }),
     memoryDump: rop(function(){
+      const ih = getInstanceHandle(this,false);
       const p = this.pointer;
       return p
-        ? new Uint8Array(heap().slice(Number(p), Number(p) + this.structInfo.sizeof))
+        ? new Uint8Array(
+          __maybeSlice(heap(), p,
+                       Number(p) + this.structInfo.sizeof + ih.xb)
+        )
         : null;
     }),
     extraBytes: {
@@ -10488,6 +10524,9 @@ function StructBinderFactory(config){
     addOnDispose: function(...v){
       __addOnDispose(this,...v);
       return this;
+    },
+    ownsOwnMemory: function(){
+      return __objOwnsOwnMemory(this);
     }
   });
 
@@ -10497,32 +10536,35 @@ function StructBinderFactory(config){
   Object.defineProperties(StructType, {
     allocCString: rop(__allocCString),
     isA: rop((v)=>v instanceof StructType),
-    hasExternalPointer: rop((v)=>{
-      const ii = getInstanceHandle(v, false);
-      return !!(ii?.p && !ii?.ownsPointer);
-    }),
     memberKey: __memberKeyProp
     //ptrAdd = rop(__ptrAdd) no b/c one might think that it adds based on this.pointer.
   });
 
   /**
-     If struct description object si has a getter proxy, return it (a
+     If struct descriptor object si has a getter proxy, return it (a
      function), else return undefined.
   */
   const memberGetterProxy = function(si){
-    return si.get || (si.adaptGet
-                      ? StructBinder.adaptGet(si.adaptGet)
-                      : undefined);
+    const g = si.getter;
+    return g
+      ? ((g instanceof Function)
+         ? g
+         : StructBinder.adaptGetter(g))
+      : undefined;
+
   };
 
   /**
-     If struct description object si has a setter proxy, return it (a
+     If struct descriptor object si has a setter proxy, return it (a
      function), else return undefined.
   */
   const memberSetterProxy = function(si){
-    return si.set || (si.adaptSet
-                      ? StructBinder.adaptSet(si.adaptSet)
-                      : undefined);
+    const s = si.setter;
+    return s
+      ? ((s instanceof Function)
+         ? s
+         : StructBinder.adaptSetter(s))
+      : undefined;
   };
 
   /**
@@ -10562,17 +10604,17 @@ function StructBinderFactory(config){
            ctor.structName,".",key,").");
     }
     if( memberSetterProxy(si) ){
-      toss("'set' and 'adaptSet' are not permitted for nested struct members.");
+      toss("'set' and 'adaptSetter' are not permitted for nested struct members.");
     }
-    //console.warn("si =",ctor.structName, name, JSON.stringify(si,'  '));
+    //warn("si =",ctor.structName, name, JSON.stringify(si,'  '));
     si.structName ??= ctor.structName+'::'+name;
     si.key = key;
     si.name = name;
     si.constructor = this.call(this, si.structName, si);
-    //console.warn("si.constructor =",si.constructor);
-    //console.warn("si =",si,"ctor=",ctor);
+    //warn("si.constructor =",si.constructor);
+    //warn("si =",si,"ctor=",ctor);
     const getterProxy = memberGetterProxy(si);
-    const prop = Object.assign(Object.create(null),{
+    const prop = nu({
       configurable: false,
       enumerable: false,
       set: __propThrowOnSet(ctor/*not si.constructor*/.structName, key),
@@ -10583,13 +10625,20 @@ function StructBinderFactory(config){
         let s = __innerStructs.get(k);
         if(dbg.getter){ log("debug.getter: k =",k); }
         if( !s ){
+          /* Create a proxy to access this member and set
+             it up to be disposed when this object is.*/
           s = new si.constructor(__ptrAdd(p, si.offset));
           __innerStructs.set(k, s);
           this.addOnDispose(()=>s.dispose());
-          s.addOnDispose(()=>__innerStructs.delete(k));
-          //console.warn("Created",k,"proxy");
+          s.addOnDispose(
+            ()=>__innerStructs.delete(k)
+            /* Reminder: we need this attached to s, instead of
+               doing it via this.addOnDispose(), in case
+               s.dispose() is called. */
+          );
+          //warn("Created",k,"proxy");
         }
-        if(getterProxy) s = getterProxy.apply(this,[s,key]);
+        if(getterProxy) s = getterProxy.call(this, name, s);
         if(dbg.getter) log("debug.getter: result =",s);
         return s;
       }
@@ -10615,16 +10664,16 @@ function StructBinderFactory(config){
     if(!f.cache){
       /* Cache all available getters/setters/set-wrappers for
          direct reuse in each accessor function. */
-      f.cache = {getters: {}, setters: {}, sw:{}};
-      const a = ['i','c','C','p','P','s','f','d','v()'];
+      f.cache = nu({getters: nu(), setters: nu(), sw:nu()});
+      const a = ['i','c','C','p','P','s','f','d'];
       if(bigIntEnabled) a.push('j');
-      a.forEach(function(v){
+      for(const v of a){
         f.cache.getters[v] = sigDVGetter(v) /* DataView[MethodName] values for GETTERS */;
         f.cache.setters[v] = sigDVSetter(v) /* DataView[MethodName] values for SETTERS */;
         f.cache.sw[v] = sigDVSetWrapper(v)  /* BigInt or Number ctor to wrap around values
                                            for conversion */;
-      });
-      f.sigCheck = function(obj, name, key,sig){
+      }
+      f.sigCheck = (obj, name, key,sig)=>{
         if(Object.prototype.hasOwnProperty.call(obj, key)){
           toss(obj.structName,'already has a property named',key+'.');
         }
@@ -10664,7 +10713,10 @@ function StructBinderFactory(config){
         new DataView(heap().buffer, Number(this.pointer) + si.offset, si.sizeof)
       )[f.cache.getters[sigGlyph]](0, isLittleEndian);
 
-      if(getterProxy) rc = getterProxy.apply(this,[key,rc]);
+      if(getterProxy){
+        //warn("getterProxy",rc,name,key, xPropName);
+        rc = getterProxy.call(this,name/*!key*/,rc);
+      }
       if(dbg.getter) log("debug.getter:",xPropName,"result =",rc);
       return rc;
     };
@@ -10685,7 +10737,7 @@ function StructBinderFactory(config){
           toss("Cannot set native property on a disposed",
                this.structName,"instance.");
         }
-        if( setterProxy ) v = setterProxy.apply(this,[key,v]);
+        if( setterProxy ) v = setterProxy.call(this,name/*!key*/,v);
         if( null===v || undefined===v ) v = __NullPtr;
         else if( isPtrSig(si.signature) && !__isPtr(v) ){
           if(isAutoPtrSig(si.signature) && (v instanceof StructType)){
@@ -10712,18 +10764,12 @@ function StructBinderFactory(config){
      This level of indirection is to avoid that clients can pass a
      third argument to this, as that's only for internal use.
 
-     internalOpt options:
-
-     - None right now. This is for potential use in recursion.
-
      Usages:
 
-     StructBinder(string, obj [,optObj]);
+     StructBinder(string, obj);
      StructBinder(obj);
   */
-  const StructBinderImpl = function StructBinderImpl(
-    structName, si, opt = Object.create(null)
-  ){
+  const StructBinderImpl = function StructBinderImpl(structName, si){
     /**
        StructCtor is the eventual return value of this function. We
        need to populate this early on so that we can do some trickery
@@ -10751,41 +10797,32 @@ function StructBinderFactory(config){
          zeroOnDispose: [bool=StructCtor.structInfo.zeroOnDispose]
 
          autoCalcSizeOffset: [bool=false] Automatically calculate
-         sizeof an offset. This is fine for pure-JS structs (which
+         sizeof and offset. This is fine for pure-JS structs (which
          probably aren't useful beyond testing of Jaccwabyt) but it's
          dangerous to use with actual WASM objects because we cannot
          be guaranteed to have the same memory layout as an ostensibly
          matching C struct. This applies recursively to all children
-         of the struct description.
-
-         // TODO? Per-instance overrides of the struct-level flags?
-
-         get: (k,v)=>v,
-         set: (k,v)=>v,
-         adaptGet: string,
-         adaptSet: string
-
-         // That wouldn't fit really well right now, apparently.
+         of the struct descriptor.
        });
-
     */
     const StructCtor = function StructCtor(arg){
-      //console.warn("opt",opt,arguments[0]);
+      //warn("opt",opt,arguments[0]);
       if(!(this instanceof StructCtor)){
         toss("The",structName,"constructor may only be called via 'new'.");
       }
       __allocStruct(StructCtor, this, ...arguments);
     };
-    const self = this;
+    const thisBinder = this;
     /**
-      "Convert" struct description x to a struct description, if
+      "Convert" struct descriptor x to a struct descriptor, if
       needed. This expands adaptStruct() mappings and transforms
       {memberName:signatureString} signature syntax to object form.
     */
     const ads = (x)=>{
-      //console.warn("looksLikeASig(",x,") =",looksLikeASig(x));
+      //warn("looksLikeASig(",x,") =",looksLikeASig(x));
       return (('string'===typeof x) && looksLikeASig(x))
-        ? {signature: x} : __adaptStruct2(self,x);
+      /* 2026-11-05: why was ^^^ this ^^^ done? */
+        ? nu({signature: x}) : __adaptStruct2(thisBinder,x);
     };
     if(1===arguments.length){
       si = ads(structName);
@@ -10797,20 +10834,37 @@ function StructBinderFactory(config){
       si = ads(si);
     }
     structName ??= si.structName;
-    //console.warn("arguments =",JSON.stringify(arguments));
-    structName ??= opt.structName;
-    if( !structName ) toss("One of 'name' or 'structName' are required.");
-    if( si.adapt ){
-      /* Install adaptGet(), adaptSet(), and adaptStruct() proxies. */
-      Object.keys(si.adapt.struct||{}).forEach((k)=>{
-        __adaptStruct.call(StructBinderImpl, k, si.adapt.struct[k]);
-      });
-      Object.keys(si.adapt.set||{}).forEach((k)=>{
-        __adaptSet.call(StructBinderImpl, k, si.adapt.set[k]);
-      });
-      Object.keys(si.adapt.get||{}).forEach((k)=>{
-        __adaptGet.call(StructBinderImpl, k, si.adapt.get[k]);
-      });
+    //warn("arguments =",JSON.stringify(arguments));
+    if( !structName ){
+      toss("Missing struct name. Pass it as the first argument",
+           "or in structDescriptor.structName.");
+    }
+    if( si.adaptor ){
+      /* Install adaptGetter(), adaptSetter(), and adaptStruct() proxies. */
+      for(const a of [['struct', __adaptStruct],
+                      ['setter', __adaptSetter],
+                      ['getter', __adaptGetter]]){
+        const ao = si.adaptor[a[0]];
+        if( !ao ) continue;
+        for(const e of Object.entries(ao)){
+          //warn("si.adaptor bits", a, e);
+          const [key, proxy] = e;
+          if( 'struct'===a[0] ){
+            if( !proxy || ('object'!==typeof proxy ) ){
+              error("Offending struct adaptor", si, ao);
+              toss("Expecting an Object for struct adaptor",key);
+            }
+          }else if( !(proxy instanceof Function) ){
+            toss("Expecting a function for",a[0],"adaptor",key);
+          }
+          if( a[1].call(thisBinder, e[0]) ){
+            warn(structName,"is overriding adaptor", e[0]);
+            /* Potential TODO is map any overrides to StructCtor and
+               look for those first when fetching. */
+          }
+          a[1].call(thisBinder, e[0], e[1]);
+        }
+      }
     }
     if(!si.members && !si.sizeof){
       si.sizeof = sigSize(si.signature);
@@ -10818,6 +10872,7 @@ function StructBinderFactory(config){
 
     const debugFlags = rop(SBF.__makeDebugFlags(StructBinder.debugFlags));
     Object.defineProperties(StructCtor,{
+      /* Ctor static properties. */
       debugFlags: debugFlags,
       isA: rop((v)=>v instanceof StructCtor),
       memberKey: __memberKeyProp,
@@ -10829,6 +10884,7 @@ function StructBinderFactory(config){
     });
     StructCtor.prototype = new StructType(structName, si, rop);
     Object.defineProperties(StructCtor.prototype,{
+      /* Ctor inherited properties. */
       debugFlags: debugFlags,
       constructor: rop(StructCtor)
       /*if we assign StructCtor.prototype and don't do
@@ -10838,23 +10894,22 @@ function StructBinderFactory(config){
     let lastMember = false;
     let offset = 0;
     const autoCalc = !!si.autoCalcSizeOffset;
-    //console.warn(structName,"si =",si);
+    //warn(structName,"si =",si);
     if( !autoCalc ){
       if( !si.sizeof ){
         toss(structName,"description is missing its sizeof property.");
       }
       /*if( undefined===si.offset ){
         toss(structName,"description is missing its offset property.");
-      }*/
-      si.offset ??= 0;
-    }else{
-      si.offset ??= 0;
+        }*/
     }
-    Object.keys(si.members || {}).forEach((k)=>{
+    si.offset ??= 0;
+    for( const e of Object.entries(si.members||{}) ){
       // Sanity checks of sizeof/offset info...
-      let m = ads(si.members[k]);
+      const [k, v] = e;
+      const m = ads(v);
       if(!m.members && !m.sizeof){
-        /* ^^^^ fixme: we need to recursively collect all sizeofs
+        /* fixme: we need ^^^^^^ to recursively collect all sizeofs
            before updating that. */
         m.sizeof = sigSize(m.signature);
         if(!m.sizeof){
@@ -10870,18 +10925,23 @@ function StructBinderFactory(config){
         /* A missing offset on the initial child is okay (it's always
            zero), but we don't know for sure that the members are
            their natural order, so we don't know, at this point, which
-           one is "first". */
+           one is "first".
+
+           2026-11-05: this is probably gonna break when we start
+           supporting proxied instances of structs for sharing across
+           disparate outer structs because we modify these objects.
+        */
       }
       si.members[k] = m /* in case ads() resolved it to something else */;
       if(!lastMember || lastMember.offset < m.offset) lastMember = m;
       const oldAutoCalc = !!m.autoCalc;
       if( autoCalc ) m.autoCalcSizeOffset = true;
-      makeMemberWrapper.call(self, StructCtor, k, m);
+      makeMemberWrapper.call(thisBinder, StructCtor, k, m);
       if( oldAutoCalc ) m.autoCalcSizeOffset = true;
       else delete m.autoCalcSizeOffset;
       offset += m.sizeof;
-      //console.warn("offset",sPropName(structName,k),offset);
-    });
+      //warn("offset",sPropName(structName,k),offset);
+    }
 
     if( !lastMember ) toss("No member property descriptions found.");
     if( !si.sizeof ) si.sizeof = offset;
@@ -10894,16 +10954,16 @@ function StructBinderFactory(config){
       // sizes and offsets of size-1 members may be odd values, but
       // others may not.
       if(0!==(si.sizeof%4)){
-        console.warn("Invalid struct member description",si);
+        warn("Invalid struct member description",si);
         toss(structName,"sizeof is not aligned. sizeof="+si.sizeof);
       }
       if(0!==(si.offset%4)){
-        console.warn("Invalid struct member description",si);
+        warn("Invalid struct member description",si);
         toss(structName,"offset is not aligned. offset="+si.offset);
       }
     }
     if( si.sizeof < offset ){
-      console.warn("Suspect struct description:",si,"offset =",offset);
+      warn("Suspect struct descriptor:",si,"offset =",offset);
       toss("Mismatch in the calculated vs. the provided sizeof/offset info.",
            "Expected sizeof",offset,"but got",si.sizeof,"for",si);
       /* It is legal for the native struct to be larger, so long as
@@ -10922,8 +10982,8 @@ function StructBinderFactory(config){
   StructBinder.StructType = StructType;
   StructBinder.config = config;
   StructBinder.allocCString = __allocCString;
-  StructBinder.adaptGet = __adaptGet;
-  StructBinder.adaptSet = __adaptSet;
+  StructBinder.adaptGetter = __adaptGetter;
+  StructBinder.adaptSetter = __adaptSetter;
   StructBinder.adaptStruct = __adaptStruct;
   StructBinder.ptrAdd = __ptrAdd;
   if(!StructBinder.debugFlags){
@@ -10950,56 +11010,12 @@ function StructBinderFactory(config){
   (e.g. sqlite3-api-oo1.js) have all of the infrastructure that they
   need.
 */
-globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
+sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   'use strict';
   const toss = (...args)=>{throw new Error(args.join(' '))};
   const capi = sqlite3.capi, wasm = sqlite3.wasm, util = sqlite3.util;
-  globalThis.WhWasmUtilInstaller(wasm);
-  delete globalThis.WhWasmUtilInstaller;
+  WhWasmUtilInstaller(wasm)/*injected via preprocessor*/;
 
-  if(0){
-    /**
-       Please keep this block around as a maintenance reminder
-       that we cannot rely on this type of check.
-
-       This block fails on Safari, per a report at
-       https://sqlite.org/forum/forumpost/e5b20e1feb.
-
-       It turns out that what Safari serves from the indirect function
-       table (e.g. wasm.functionEntry(X)) is anonymous functions which
-       wrap the WASM functions, rather than returning the WASM
-       functions themselves. That means comparison of such functions
-       is useless for determining whether or not we have a specific
-       function from wasm.exports. i.e. if function X is indirection
-       function table entry N then wasm.exports.X is not equal to
-       wasm.functionEntry(N) in Safari, despite being so in the other
-       browsers.
-    */
-    /**
-       Find a mapping for SQLITE_WASM_DEALLOC, which the API
-       guarantees is a WASM pointer to the same underlying function as
-       wasm.dealloc() (noting that wasm.dealloc() is permitted to be a
-       JS wrapper around the WASM function). There is unfortunately no
-       O(1) algorithm for finding this pointer: we have to walk the
-       WASM indirect function table to find it. However, experience
-       indicates that that particular function is always very close to
-       the front of the table (it's been entry #3 in all relevant
-       tests).
-    */
-    const dealloc = wasm.exports[sqlite3.config.deallocExportName];
-    const nFunc = wasm.functionTable().length;
-    let i;
-    for(i = 0; i < nFunc; ++i){
-      const e = wasm.functionEntry(i);
-      if(dealloc === e){
-        capi.SQLITE_WASM_DEALLOC = i;
-        break;
-      }
-    }
-    if(dealloc !== wasm.functionEntry(capi.SQLITE_WASM_DEALLOC)){
-      toss("Internal error: cannot find function pointer for SQLITE_WASM_DEALLOC.");
-    }
-  }
 
   /**
      Signatures for the WASM-exported C-side functions. Each entry
@@ -11018,7 +11034,8 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   */
   const bindingSignatures = {
     core: [
-      // Please keep these sorted by function name!
+      /* Please keep these sorted by function name! No algos rely
+         on that but it helps human eyeballs. */
       ["sqlite3_aggregate_context","void*", "sqlite3_context*", "int"],
       /* sqlite3_auto_extension() has a hand-written binding. */
       ["sqlite3_backup_init", "sqlite3_backup*", "sqlite3*", "string", "sqlite3*", "string"],
@@ -11048,10 +11065,9 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
       ]],
       ["sqlite3_busy_timeout","int", "sqlite3*", "int"],
       /* sqlite3_cancel_auto_extension() has a hand-written binding. */
-      /* sqlite3_close_v2() is implemented by hand to perform some
-         extra work. */
       ["sqlite3_changes", "int", "sqlite3*"],
       ["sqlite3_clear_bindings","int", "sqlite3_stmt*"],
+      ["sqlite3_close_v2", "int", "sqlite3*"],
       ["sqlite3_collation_needed", "int", "sqlite3*", "*", "*"/*=>v(ppis)*/],
       ["sqlite3_column_blob","*", "sqlite3_stmt*", "int"],
       ["sqlite3_column_bytes","int", "sqlite3_stmt*", "int"],
@@ -11199,19 +11215,11 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
          working.  Rather than fix it, it was removed because testing
          the fix brought the huge potential for memory leaks to the
          forefront.
+
+
       */
       ["sqlite3_set_auxdata", undefined, [
-        "sqlite3_context*", "int", "*",
-        true
-          ? "*"
-          : new wasm.xWrap.FuncPtrAdapter({
-            /* If we can find a way to automate their cleanup, JS functions can
-               be auto-converted with this. */
-            name: 'xDestroyAuxData',
-            signature: 'v(p)',
-            contextKey: (argv, argIndex)=>argv[0/* sqlite3_context* */]
-          })
-      ]],
+        "sqlite3_context*", "int", "*","*"]],
       ['sqlite3_set_errmsg', 'int', 'sqlite3*', 'int', 'string'],
       ["sqlite3_shutdown", undefined],
       ["sqlite3_sourceid", "string"],
@@ -11667,7 +11675,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
      Prepare JS<->C struct bindings for the non-opaque struct types we
      need...
   */
-  sqlite3.StructBinder = globalThis.Jaccwabyt({
+  sqlite3.StructBinder = Jaccwabyt({/*injected via preprocessor*/
     heap: wasm.heap8u,
     alloc: wasm.alloc,
     dealloc: wasm.dealloc,
@@ -11678,7 +11686,6 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
                      later: it probably should have been '$$', but see
                      the previous sentence.) */ '$'
   });
-  delete globalThis.Jaccwabyt;
 
   {// wasm.xWrap() bindings...
 
@@ -11693,8 +11700,8 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
        The 'string:static' argument adapter treats its argument as
        either...
 
-       - WASM pointer: assumed to be a long-lived C-string which gets
-         returned as-is.
+       - If wasm.isPtr(v) is true it is assumed to be a long-lived
+         C-string pointer which gets returned as-is.
 
        - Anything else: gets coerced to a JS string for use as a map
          key. If a matching entry is found (as described next), it is
@@ -11716,8 +11723,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
       function(v){
         if(wasm.isPtr(v)) return v;
         v = ''+v;
-        let rc = this[v];
-        return rc || (this[v] = wasm.allocCString(v));
+        return this[v] ??= wasm.allocCString(v);
       }.bind(Object.create(null))
     );
 
@@ -11861,7 +11867,42 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
       toss("Maintenance required: increase sqlite3__wasm_enum_json()'s",
            "static buffer size!");
     }
-    wasm.ctype = JSON.parse(wasm.cstrToJs(cJson));
+    const j = wasm.cstrToJs(cJson);
+    //sqlite3.config.error("cJson JSON length:",j.length);
+    wasm.ctype = JSON.parse(j);
+    if( wasm.exports.sqlite3__wasm_disposal_notifier ){
+    /* Redirect the SQLITE_DISPOSAL_NOTIFIER callback installed by
+       sqlite3-wasm.c to JS. */
+      util.disposers = Object.assign(Object.create(null),{
+        /* Lists of disposer callbacks which are passed the WASM pointer
+           of an object which is currently being finalized from
+           WASM. These are triggered via the SQLITE_DISPOSAL_NOTIFIER
+           callback which sqlite3-wasm.c installs. The C side of this
+           ensures that these callbacks are never passed NULL.
+           Downstream library bootstrapping code may append callbacks to
+           these (e.g. oo1 does so). */
+        db: [], stmt: []
+      });
+      /* Map type IDs to names to simplify $callback() below. */
+      util.disposers[1] = util.disposers.db;
+      util.disposers[2] = util.disposers.stmt;
+      const funcNr = wasm.installFunction("v(ip)", (tid,ptr)=>{
+        //sqlite3.config.debug("WasmDisposalNotifier:",tid,ptr);
+        const li = util.disposers[tid]
+              ?? toss("Internal bug: invalid disposal type ID",tid);
+        for(const d of li){
+          try{d(ptr)}
+          catch(e){
+            sqlite3.config.error("on-dispose handler type",
+                                 tid,"threw:",e,d);
+          }
+        }
+      });
+      wasm.pokePtr(wasm.exports.sqlite3__wasm_disposal_notifier(), funcNr);
+    }else{
+      toss("Expecting WasmDisposalNotifier to have been exported.");
+    }
+
     // Groups of SQLITE_xyz macros...
     const defineGroups = ['access', 'authorizer',
                           'blobFinalizers', 'changeset',
@@ -11902,6 +11943,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
     const notThese = Object.assign(Object.create(null),{
       // For each struct to NOT register, map its name to true:
       WasmTestStruct: true,
+      WasmDisposalNotifier: true,
       /* sqlite3_index_info and friends require int64: */
       sqlite3_index_info: !wasm.bigIntEnabled,
       sqlite3_index_constraint: !wasm.bigIntEnabled,
@@ -11957,7 +11999,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
      UDFs and collations so that sqlite3_close_v2() can clean up any
      automated JS-to-WASM function conversions installed by those.
   */
-  const __argPDb = (pDb)=>wasm.xWrap.argAdapter('sqlite3*')(pDb);
+  const __argPDb = wasm.xWrap.argAdapter('sqlite3*');
   const __argStr = (str)=>wasm.isPtr(str) ? wasm.cstrToJs(str) : str;
   const __dbCleanupMap = function(
     pDb, mode/*0=remove, >0=create if needed, <0=do not create if missing*/
@@ -12026,6 +12068,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   */
   __dbCleanupMap.cleanup = function(pDb){
     pDb = __argPDb(pDb);
+    //sqlite3.config.warn("disposing pDb",pDb);
     //wasm.xWrap.FuncPtrAdapter.debugFuncInstall = false;
     /**
        Installing NULL functions in the C API will remove those
@@ -12105,16 +12148,12 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
     delete m.wudf;
   }/*__dbCleanupMap.cleanup()*/;
 
-  {/* Binding of sqlite3_close_v2() */
-    const __sqlite3CloseV2 = wasm.xWrap("sqlite3_close_v2", "int", "sqlite3*");
-    capi.sqlite3_close_v2 = function(pDb){
-      if(1!==arguments.length) return __dbArgcMismatch(pDb, 'sqlite3_close_v2', 1);
-      if(pDb){
-        try{__dbCleanupMap.cleanup(pDb)} catch(e){/*ignored*/}
-      }
-      return __sqlite3CloseV2(pDb);
-    };
-  }/*sqlite3_close_v2()*/
+  util.disposers.db.push(
+    /* When a db is disposed from C, this will clean up the various
+       state we've bound in __dbCleanupMap, e.g. JS-to-WASM function
+       conversions for the tracer. */
+    __dbCleanupMap.cleanup
+  );
 
   if(capi.sqlite3session_create){
     const __sqlite3SessionDelete = wasm.xWrap(
@@ -12252,7 +12291,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
                 callback(pCtx, ...capi.sqlite3_values_to_js(argc, pArgv))
               );
             }catch(e){
-              //console.error('xFunc() caught:',e);
+              //sqlite3.config.error('xFunc() caught:',e);
               capi.sqlite3_result_error_js(pCtx, e);
             }
           };
@@ -12264,7 +12303,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
         callProxy: (callback)=>{
           return (pVoid)=>{
             try{ callback(pVoid) }
-            catch(e){ console.error("UDF xDestroy method threw:",e) }
+            catch(e){ sqlite3.config.error("UDF xDestroy(",pVoid,") threw:",e) }
           };
         }
       }
@@ -12322,7 +12361,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
         }
         return rc;
       }catch(e){
-        console.error("sqlite3_create_function_v2() setup threw:",e);
+        sqlite3.config.error("sqlite3_create_function_v2() setup threw:",e);
         return util.sqlite3__wasm_db_error(pDb, e, "Creation of UDF threw: "+e);
       }
     };
@@ -12368,7 +12407,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
           }
           return rc;
         }catch(e){
-          console.error("sqlite3_create_window_function() setup threw:",e);
+          sqlite3.config.error("sqlite3_create_window_function() setup threw:",e);
           return util.sqlite3__wasm_db_error(pDb, e, "Creation of UDF threw: "+e);
         }
       };
@@ -12406,6 +12445,9 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
     }
 
   }/*sqlite3_create_function_v2() and sqlite3_create_window_function() proxies*/;
+
+  /* Warn if client-level code makes use of FuncPtrAdapter. */
+  wasm.xWrap.FuncPtrAdapter.warnOnUse = true;
 
   {/* Special-case handling of sqlite3_prepare_v2() and
       sqlite3_prepare_v3() */
@@ -12509,8 +12551,8 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
         return __bindText(pStmt, iCol, text, nText, xDestroy);
       }else if(text instanceof ArrayBuffer){
         text = new Uint8Array(text);
-      }else if(Array.isArray(pMem)){
-        text = pMem.join('');
+      }else if(Array.isArray(text)){
+        text = text.join('');
       }
       let p, n;
       try{
@@ -12518,7 +12560,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
           p = wasm.allocFromTypedArray(text);
           n = text.byteLength;
         }else if('string'===typeof text){
-          [p, n] = wasm.allocCString(text);
+          [p, n] = wasm.allocCString(text, true);
         }else{
           return util.sqlite3__wasm_db_error(
             capi.sqlite3_db_handle(pStmt), capi.SQLITE_MISUSE,
@@ -12552,7 +12594,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
           p = wasm.allocFromTypedArray(pMem);
           n = nMem>=0 ? nMem : pMem.byteLength;
         }else if('string'===typeof pMem){
-          [p, n] = wasm.allocCString(pMem);
+          [p, n] = wasm.allocCString(pMem, true);
         }else{
           return util.sqlite3__wasm_db_error(
             capi.sqlite3_db_handle(pStmt), capi.SQLITE_MISUSE,
@@ -12693,8 +12735,160 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
     };
   }/* auto-extension */
 
-  /* Warn if client-level code makes use of FuncPtrAdapter. */
-  wasm.xWrap.FuncPtrAdapter.warnOnUse = true;
+  {/* sqlite3_js_on_pointer_dispose() */
+    const __jsOnDisposeTypes = (()=>{
+      /* Map of type names to Map(ptr, Set<Function>) */
+      const jodt = util.nu({
+        /* Lazily populated. */
+        "sqlite3*": null,
+        "sqlite3_stmt*": null
+      });
+      for( const e of [['db','sqlite3*'], ['stmt','sqlite3_stmt*']] ){
+        const [disposerKey, typeName] = e;
+        util.disposers[disposerKey].push((ptr)=>{
+          /* Call all callbacks queued for the given ptr/typeName
+             combination and clear that queue. */
+          const di = jodt[typeName];
+          const set = di?.get?.(ptr);
+          if( !set /* pointers for _all_ disposals come through here
+                      but we only act on the ones in our Set. */ ) return;
+          //sqlite3.config.debug("jopd",ptr,di,set);
+          di.delete(ptr);
+          for(const f of set){
+            try{f(ptr)} catch(e){
+              sqlite3.config.error(
+                "sqlite3_js_on_pointer_dispose(",
+                t,ptr,f,") callback threw", e
+              );
+            }
+          }
+        });
+      }
+      return jodt;
+    })();
+
+    /**
+       Sets up the given callback to be called when the given WASM
+       pointer is finalized by the library. The purposes of this is to
+       provide client code with a way to map JS state to native
+       pointers in such a way that the state can be cleaned up
+       regardless of how the natives are finalized.
+
+       typeName describes what data type ptr is. It must be one of:
+
+       "sqlite3*", "sqlite3_stmt*"
+
+       and the ptr argument must be a non-null pointer to that type.
+
+       The callback must be either a Function or a WASM function
+       pointer[^1] to a function with the signature `void(*)(void*)`,
+       a.k.a. "v(p)" in the library's function-binding parlance.
+
+       It is legal to call this multiple times for a given combination
+       of pointer and callback. Each callback will be added to the
+       queue only once for each distinct callback reference, with the
+       caveat noted below regarding callback references. That is,
+       calling it N times with the same ptr/callback combination will
+       only install the callback once, but N calls with N distinct
+       callbacks will install all N.
+
+       When used in loops or client functions which may see the same
+       pointer multiple times, it is generally important to **not pass
+       function literals**, as each such literal is a different
+       instance, so an identical callback may be added N times for a
+       given pointer. Functions should be assigned to symbols and
+       those symbols should be passed in so that callback
+       deduplication works:
+
+       ```
+       // NO:
+       sqlite3_js_on_pointer_dispose(..., (x)=>...);
+       // YES:
+       const myFunc = (x)=>...;
+       ...
+       sqlite3_js_on_pointer_dispose(..., myFunc);
+       // Also YES:
+       let myFunc;
+       ...
+       sqlite3_js_on_pointer_dispose(..., (myFunc ??= (x)=>...));
+       ```
+
+       For single-call cases, e.g. when passing a newly-initialized db
+       or statement, a function literal is perfectly fine. Within
+       loops and client-defined functions which are called more than
+       once per native instance, function literals will cause grief in
+       the form of potentially registering a separate callback for
+       each invocation of the SQL function.
+
+       On success it returns an unspecified truthy value. On error
+       (argument validation issues) it returns an unspecified falsy
+       value and has no side-effects. It does not throw because it's
+       intended to be usable from cases where throwing is not
+       permitted, but it only fails for argument validation.
+
+       When SQLite is about to free that pointer, all callbacks
+       queued for it will be passed that pointer and then the
+       callback queue for that pointer is cleared.
+
+       Because the callback is called during the native-level
+       finalization process, it must observe certain limitations:
+
+       - It absolutely must not finalize the object, or results are
+       well and truly undefined. Best case, a WASM crash.
+
+       - Because multiple on-dispose listeners may be installed for
+       any given pointer, the callback must not leave the object in an
+       unusable state.
+
+       - It should not perform "real work" with the pointer. e.g. a
+       finalizing statement must not be stepped nor its columns
+       fetched. A finalizing db should probably not run new
+       queries.
+
+       - Any exceptions are ignored but may trigger an alert via
+       sqlite3.config.error().
+
+       Ideally, such callbacks do nothing more than remove any state
+       which they have mapped to the given pointer value, without
+       actually trying to use the object referred to by that pointer.
+       Sometimes, however, cleanup work may be necessary which
+       involves judicious use of that type's methods.
+
+       Added in 3.55.0.
+
+       Design note: ideally we could support `sqlite3_context*`, as
+       that would neatly tie in cleanup for user-defined SQL
+       functions.  However, the C APIs do not guaranty stability of
+       those pointers across calls. It currently provides
+       _unguaranteed_ stability in two cases but does not for any
+       aggregate-specific cases, making it unsuitable for the problem
+       this API addresses (pun not intended).
+
+       [^1]: Though callback may be a WASM function pointer, that is
+         actually less efficient than passing a JS function. The
+         on-dispose dispatching is called from native code, invoking a
+         JS function which the library connects to it during
+         bootstrapping.  sqlite3_js_on_pointer_dispose() receives the
+         notifications "second hand" through that mechanism.  If
+         callback is a WASM function, invoking it adds one more step
+         from JS-space into C-space and back.
+    */
+    capi.sqlite3_js_on_pointer_dispose = function(typeName, ptr, callback){
+      if( !ptr || !wasm.isPtr(ptr) ) return null;
+      else if( !(callback instanceof Function)
+               && !(callback = wasm.functionEntry(callback)) ){
+        return undefined;
+      }
+      else if( !Object.prototype.hasOwnProperty.call(__jsOnDisposeTypes, typeName) ){
+        return false;
+      }
+      const map = __jsOnDisposeTypes[typeName] ??= new Map;
+      if( !map.get(ptr)?.add?.(callback) ){
+        map.set(ptr, new Set([callback]));
+      }
+      return true;
+    };
+  }
 
   const StructBinder = sqlite3.StructBinder
   /* we require a local alias b/c StructBinder is removed from the sqlite3
@@ -12724,7 +12918,8 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
      thing as this one, permitting calls to be chained.
 
      If called with only 1 arg, it has no side effects but returns a
-     func with the same signature as described above.
+     func proxying this one which takes (name,func) arguments and
+     curries the other two.
 
      ACHTUNG: because we cannot generically know how to transform JS
      exceptions into result codes, the installed functions do no
@@ -12743,13 +12938,13 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   const installMethod = function callee(
     tgt, name, func, applyArgcCheck = callee.installMethodArgcCheck
   ){
-    if(!(tgt instanceof StructBinder.StructType)){
-      toss("Usage error: target object is-not-a StructType.");
-    }else if(!(func instanceof Function) && !wasm.isPtr(func)){
-      toss("Usage error: expecting a Function or WASM pointer to one.");
-    }
     if(1===arguments.length){
       return (n,f)=>callee(tgt, n, f, applyArgcCheck);
+    }
+    if(!(tgt instanceof StructBinder.StructType)){
+      toss("Usage error: target object is-not-a StructType.");
+    }else if(!(func instanceof Function) && !wasm.functionEntry(func)){
+      toss("Usage error: expecting a Function or WASM pointer to one.");
     }
     if(!callee.argcProxy){
       callee.argcProxy = function(tgt, funcName, func,sig){
@@ -12762,8 +12957,9 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
           return func.apply(this, args);
         }
       };
-      /* An ondispose() callback for use with
-         StructBinder-created types. */
+      /* An ondispose() callback for use with StructBinder-created
+         instances. It removes all WASM functions which were installed
+         as proxies into `this` by installMethod(). */
       callee.removeFuncList = function(){
         if(this.ondispose.__removeFuncList){
           this.ondispose.__removeFuncList.forEach(
@@ -12793,14 +12989,14 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
           ? callee.argcProxy(tgt, memKey, func, sigN)
           : func;
     if(wasm.isPtr(fProxy)){
-      if(fProxy && !wasm.functionEntry(fProxy)){
+      if(!fProxy || !wasm.functionEntry(fProxy)){
         toss("Pointer",fProxy,"is not a WASM function table entry.");
       }
       tgt[memKey] = fProxy;
     }else{
       const pFunc = wasm.installFunction(fProxy, sigN);
       tgt[memKey] = pFunc;
-      if(!tgt.ondispose || !tgt.ondispose.__removeFuncList){
+      if( !tgt.ondispose?.__removeFuncList ){
         tgt.addOnDispose('ondispose.__removeFuncList handler',
                          callee.removeFuncList);
         tgt.ondispose.__removeFuncList = [];
@@ -12887,7 +13083,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   WASM build. It requires that sqlite3-api-glue.js has already run
   and it installs its deliverable as sqlite3.oo1.
 */
-globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
+sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   const toss3 = (...args)=>{throw new sqlite3.SQLite3Error(...args)};
 
   const capi = sqlite3.capi, wasm = sqlite3.wasm, util = sqlite3.util;
@@ -12923,6 +13119,23 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
      it.
   */
   const __ptrMap = new WeakMap();
+  /**
+     Map of (cPointer to X):
+
+     - (sqlite3*) to DB instances, but only to instances which own
+     their db handle pointer. It's possible to share a C handle across
+     multiple DB instances but integrating a clean disconnect from
+     those using this mechanism has proven tricky.
+
+     - (sqlite3_stmt*) to DB.Stmt
+
+     For use by the disposer hook, so that we can properly unplug
+     native handles from their JS objects if the native handle is
+     closed using sqlite3_close_v2() resp. sqlite3_finalize().
+
+     This cannot be a WeakMap because their keys must be objects.
+  */
+  const __disposerMap = new Map();
   /**
      A Set of oo1.DB or oo1.Stmt objects which are proxies for
      (sqlite3*) resp. (sqlite3_stmt*) pointers which themselves are
@@ -13070,6 +13283,10 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
     }
     __ptrMap.set(this, pDb);
     __stmtMap.set(this, Object.create(null));
+    if( !__disposerMap.has(pDb) ){
+      /* Only register the prime instance with the disposer. */
+      __disposerMap.set(pDb, this);
+    }
     if( !opt['sqlite3*'] ){
       try{
         // Check for per-VFS post-open SQL/callback...
@@ -13274,6 +13491,9 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
     __ptrMap.set(this, arguments[1]);
     if( arguments.length>3 && !arguments[3] ){
       __doesNotOwnHandle.add(this);
+    }else{
+      /* Only the prime instances go into __disposerMap. */
+      __disposerMap.set(arguments[1], this);
     }
   };
 
@@ -13508,6 +13728,72 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   */
   DB.checkRc = (db,resultCode)=>checkSqlite3Rc(db,resultCode);
 
+  /**
+     Internal helper for __oo1NativeDisposerDB and
+     __oo1NativeDisposerStmt.  Detaches any non-owning handles shared
+     via DB/Stmt.wrapHandle() which refer to the owning pointer ptr,
+     cleanly invalidating them so that they do not point to stale
+     pointers.
+  */
+  const __disposerUnowned = (lbl, ptr, disposer)=>{
+    const unowned = Array.from(__doesNotOwnHandle).filter(x=>ptr===x.pointer);
+    if( unowned.length ){
+      sqlite3.config.warn("Closing",lbl,"handle",
+                          ptr,"out from under shared holders.",
+                         unowned);
+      /* Two-pass to prevent further recursion. */
+      for(const u of unowned) __doesNotOwnHandle.delete(u);
+      for(const u of unowned) disposer(ptr, u);
+    }
+  };
+  /**
+     Hook for SQLITE_DISPOSAL_NOTIFIER. Expects ptr to be an
+     (sqlite3*), for which it unmaps any state to its partner DB
+     object (if any). The o arg is intended to be `this` from
+     DB.close().
+  */
+  const __oo1NativeDisposerDB = (ptr, o)=>{
+    o ??= __disposerMap.get(ptr);
+    //sqlite3.config.warn("__oo1NativeDisposerDB", ptr, o);
+    if( !o ) return;
+    __doesNotOwnHandle.delete(o);
+    if( o===__disposerMap.get(ptr) ){
+      /* The prime instance. */
+      __disposerMap.delete(ptr);
+      __disposerUnowned('DB', ptr, __oo1NativeDisposerDB);
+    }
+    const st = __stmtMap.get(o);
+    __stmtMap.delete(o);
+    if( st ){
+      for(const s of Object.values(st)){
+        try{s.finalize()}
+        catch(ex){/*ignore*/}
+      }
+    }
+    __ptrMap.delete(o);
+  };
+
+  /** DB.Stmt counterpart of __oo1NativeDisposerDB().  The o arg is
+      intended to be `this` from Stmt.finalize(). */
+  const __oo1NativeDisposerStmt = (ptr, o)=>{
+    o ??= __disposerMap.get(ptr);
+    //sqlite3.config.warn("__oo1NativeDisposerStmt", ptr, o);
+    if( !o ) return;
+    delete  __stmtMap.get(o.db)?.[ptr];
+    delete o.db;
+    __execLock.delete(o);
+    __stmtMayGet.delete(o);
+    __doesNotOwnHandle.delete(o);
+    if( o===__disposerMap.get(ptr) ){
+      /* The prime instance. */
+      __disposerMap.delete(ptr);
+      __disposerUnowned('Stmt', ptr, __oo1NativeDisposerStmt);
+    }
+    __ptrMap.delete(o);
+  };
+  util.disposers.db.push(__oo1NativeDisposerDB);
+  util.disposers.stmt.push(__oo1NativeDisposerStmt);
+
   DB.prototype = {
     /** Returns true if this db handle is open, else false. */
     isOpen: function(){
@@ -13545,27 +13831,37 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
        If this instance was created using DB.wrapHandle() and does not
        own this.pointer then it does not close the db handle but it
        does perform all other work, such as calling onclose callbacks
-       and disassociating this object from this.pointer.
+       (which are local to that instance) and disassociating this
+       object from its native this.pointer.
+
+       As of version 3.55.0, DB objects are disassociated from their
+       native counterpart if the native is passed to
+       sqlite3_close_v2().  A side-effect of that is that this
+       function becomes a no-op if a db handle is closed that way.
+       i.e. onclose handlers will not be called. Prior to that change,
+       passing such a pointer to sqlite3_close_v2() invoked undefined
+       behavior. Design note: the onclose handlers are not called in
+       that case because they are feature of this method, not of the
+       db handle. We "could", with only a small amount of acrobatics,
+       call onclose handlers even in that case, but it does not seem
+       like the right thing to do. Clients wishing to apply the
+       callbacks regardless of how the handle is closed simply need to
+       bind the onclose handlers to the underlying db pointer using
+       sqlite3_js_on_pointer_dispose().
     */
     close: function(){
       const pDb = this.pointer;
       if(pDb){
-        if(this.onclose?.before instanceof Function){
-          try{this.onclose.before(this)}
+        const owns = !__doesNotOwnHandle.delete(this);
+        const onclose = this.onclose;
+        delete this.onclose/*avoid a recursion case*/;
+        if(onclose?.before instanceof Function){
+          try{onclose.before(this)}
           catch(e){/*ignore*/}
         }
-        for(const s of Object.values(__stmtMap.get(this))){
-          if(s?.pointer){
-            try{s.finalize()}
-            catch(ex){/*ignore*/}
-          }
-        }
-        __ptrMap.delete(this);
-        __stmtMap.delete(this);
-        if( !__doesNotOwnHandle.delete(this) ){
-          capi.sqlite3_close_v2(pDb);
-        }
-        if(this.onclose?.after instanceof Function){
+        __oo1NativeDisposerDB(pDb, this);
+        if( owns ) capi.sqlite3_close_v2(pDb);
+        if(onclose?.after instanceof Function){
           try{this.onclose.after(this)}
           catch(e){/*ignore*/}
         }
@@ -14216,10 +14512,9 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
 
     /**
        Returns the number of currently-opened Stmt handles for this db
-       handle, or 0 if this DB instance is closed. Note that only
-       handles prepared via this.prepare() are counted, and not
-       handles prepared using capi.sqlite3_prepare_v3() (or
-       equivalent).
+       handle, or 0 if this DB instance is closed. Only handles
+       prepared via this.prepare() are counted, and not handles
+       prepared using capi.sqlite3_prepare_v3() (or equivalent).
     */
     openStatementCount: function(){
       return this.pointer ? Object.keys(__stmtMap.get(this)).length : 0;
@@ -14485,7 +14780,8 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
             }
           }else{ // !int32, !bigint
             val = Number(val);
-            if(wasm.bigIntEnabled && Number.isInteger(val)){
+            if(wasm.bigIntEnabled && Number.isInteger(val)
+               && util.bigIntFits64(val)){
               m = capi.sqlite3_bind_int64;
             }else{
               m = capi.sqlite3_bind_double;
@@ -14536,22 +14832,27 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
 
        If Stmt does not own its underlying (sqlite3_stmt*) (see
        Stmt.wrapHandle()) then this function will not pass it to
-       sqlite3_finalize().
+       sqlite3_finalize() and will return 0.
+
+       As of version 3.55, passing this object to sqlite3_finalize()
+       is well-behaved, in that it will clean up the various
+       oo1-related internal bookkeeping. It will, however, also bypass
+       the statement-locking checks, enabling it to be (illegally)
+       finalized at times when this method would otherwise throw.
+       In prior versions doing so would leave this object holding
+       a stale pointer.
     */
     finalize: function(){
       const ptr = this.pointer;
       if(ptr){
         affirmNotLockedByExec(this,'finalize()');
-        const rc = (__doesNotOwnHandle.delete(this)
-                    ? 0
-                    : capi.sqlite3_finalize(ptr));
-        delete __stmtMap.get(this.db)[ptr];
-        __ptrMap.delete(this);
-        __execLock.delete(this);
-        __stmtMayGet.delete(this);
-        delete this.parameterCount;
-        delete this.db;
-        return rc;
+        if( __doesNotOwnHandle.delete(this) ){
+          __oo1NativeDisposerStmt(ptr, this);
+          return 0;
+        }
+        return capi.sqlite3_finalize(
+          ptr /* triggers __oo1NativeDisposerStmt */
+        );
       }
     },
     /**
@@ -14876,7 +15177,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
        that we're generally fetching rows of mixed data types. As of
        3.54, it still behaves that way when passed the undefined value
        resp. is not passed a value, but will coerce each column to the
-       request type of it is not the undefined value. It is not
+       requested type if it is not the undefined value. It is not
        believed that this change adversely affects any existing
        client-level code because this argument was ignored and
        applications passing a non-undefined value were not necessarily
@@ -15471,7 +15772,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   ```
 
 */
-globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
+sqlite3ApiBootstrap.initializers.push(function(sqlite3){
 const util = sqlite3.util;
 sqlite3.initWorker1API = function(){
   'use strict';
@@ -15795,7 +16096,7 @@ sqlite3.initWorker1API = function(){
    the creation of JavaScript implementations of sqlite3_vfs.
 */
 'use strict';
-globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
+sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   const wasm = sqlite3.wasm, capi = sqlite3.capi, toss = sqlite3.util.toss3;
   const vfs = Object.create(null);
   sqlite3.vfs = vfs;
@@ -15900,7 +16201,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
    without virtual table support then this function does nothing.
 */
 'use strict';
-globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
+sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   if( !sqlite3.wasm.exports.sqlite3_declare_vtab ){
     return;
   }
@@ -16407,7 +16708,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
    e.g. asynchronously post updates to db pages to some back-end for
    backups.
 */
-globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
+sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   if( sqlite3.config.disable?.vfs?.kvvfs ){
     return;
   }
@@ -16862,7 +17163,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
               ev.data[1] = wcache[args[0]];
               continue;
             }
-            u8enc ??= new TextEncoder('utf-8');
+            u8enc ??= new TextEncoder();
             z0 ??= cache.memBuffer(10);
             z1 ??= cache.memBuffer(11);
             const u = u8enc.encode(args[1]);
@@ -18328,7 +18629,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   }/* virtual table */
 
 
-})/*globalThis.sqlite3ApiBootstrap.initializers*/;
+})/*sqlite3ApiBootstrap.initializers*/;
 /*
   2026-03-04
 
@@ -18349,7 +18650,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   testing purposes only) using an undocumented and unsupported
   mechanism.
 */
-globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
+sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   'use strict';
   if( sqlite3.config.disable?.vfs?.opfs &&
       sqlite3.config.disable.vfs['opfs-vfs'] ){
@@ -19445,7 +19746,7 @@ const initS11n = function(){
   */
   if(state.s11n) return state.s11n;
   const textDecoder = new TextDecoder(),
-        textEncoder = new TextEncoder('utf-8'),
+        textEncoder = new TextEncoder(),
         viewU8 = new Uint8Array(state.sabIO, state.sabS11nOffset, state.sabS11nSize),
         viewDV = new DataView(state.sabIO, state.sabS11nOffset, state.sabS11nSize);
   state.s11n = Object.create(null);
@@ -19780,7 +20081,7 @@ const initS11n = function(){
   after sqlite3-api-oo1.js.
 */
 'use strict';
-globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
+sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   if( !sqlite3.opfs || sqlite3.config.disable?.vfs?.opfs ){
     return;
   }
@@ -19932,7 +20233,7 @@ const installOpfsVfs = async function(options){
     }/*extend sqlite3.oo1*/
   })/*bindVfs()*/;
 }/*installOpfsVfs()*/;
-globalThis.sqlite3ApiBootstrap.initializersAsync.push(async (sqlite3)=>{
+sqlite3ApiBootstrap.initializersAsync.push(async (sqlite3)=>{
   return installOpfsVfs().catch((e)=>{
     sqlite3.config.warn("Ignoring inability to install 'opfs' sqlite3_vfs:",e);
   })
@@ -19995,7 +20296,7 @@ globalThis.sqlite3ApiBootstrap.initializersAsync.push(async (sqlite3)=>{
   major browsers released since March 2023). If that API is not
   detected, the VFS is not registered.
 */
-globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
+sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   'use strict';
   if( sqlite3.config.disable?.vfs?.['opfs-sahpool'] ){
     return;
@@ -20344,7 +20645,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
           if(pool.getFileCount() < pool.getCapacity()) {
             // Choose an unassociated OPFS file from the pool.
             sah = pool.nextAvailableSAH();
-            pool.setAssociatedPath(sah, path, flags);
+            pool.setClientPath(sah, path, flags);
           }else{
             // File pool is full.
             toss('SAH pool is full. Cannot create file',path);
@@ -20466,7 +20767,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
     /* Maps SAH to an abstract File Object which contains
        various metadata about that handle. */
 
-    /** Buffer used by [sg]etAssociatedPath(). */
+    /** Buffer used by [sg]etClientPath(). */
     #apBody = new Uint8Array(HEADER_CORPUS_SIZE);
     // DataView for this.#apBody
     #dvBody;
@@ -20535,7 +20836,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
         const h = await this.#dhOpaque.getFileHandle(name, {create:true});
         const ah = await h.createSyncAccessHandle();
         this.#mapSAHToName.set(ah,name);
-        this.setAssociatedPath(ah, '', 0);
+        this.setClientPath(ah, '', 0);
         //this.#createFileObject(ah,undefined,name);
       }
       return this.getCapacity();
@@ -20614,9 +20915,9 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
         this.#mapSAHToName.set(ah, name);
         if(clearFiles){
           ah.truncate(HEADER_OFFSET_DATA);
-          this.setAssociatedPath(ah, '', 0);
+          this.setClientPath(ah, '', 0);
         }else{
-          const path = this.getAssociatedPath(ah);
+          const path = this.getClientPath(ah);
           if(path){
             this.#mapFilenameToSAH.set(path, ah);
           }else{
@@ -20640,43 +20941,57 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
        Given an SAH, returns the client-specified name of
        that file by extracting it from the SAH's header.
 
-       On error, it disassociates SAH from the pool and
-       returns an empty string.
+       On error it disassociates SAH from the pool and returns an
+       empty string. Propagates any exceptions from the SAH API and
+       throws for short header reads.
     */
-    getAssociatedPath(sah){
-      sah.read(this.#apBody, {at: 0});
+    getClientPath(sah){
+      const nRead = sah.read(this.#apBody, {at: 0});
+      const nSah = sah.getSize();
+      const minSz = Math.min(this.#apBody.byteLength, nSah);
+      if( nRead<minSz ){
+        toss("OPFSSAHPool[",this.vfsName,"]: Short header read:",
+             nRead,"of", minSz," bytes");
+      }
       // Delete any unexpected files left over by previous
-      // untimely errors...
+      // untimely errors, recovering when we can...
       const flags = this.#dvBody.getUint32(HEADER_OFFSET_FLAGS);
+      const nPath = this.#apBody.indexOf(0);
+      if( nPath>0
+          && nSah>HEADER_OFFSET_DATA
+          && 0===(flags & capi.SQLITE_OPEN_DELETEONCLOSE) ){
+        /* This entry's header has presumably been "torn" by untimely
+           death during a write, but we can recover from that.
+           Discussion: bugs:7418667df7 */
+        return textDecoder.decode(this.#apBody.subarray(0, nPath));
+      }
       if(this.#apBody[0] &&
          ((flags & capi.SQLITE_OPEN_DELETEONCLOSE) ||
           (flags & PERSISTENT_FILE_TYPES)===0)){
         warn(`Removing file with unexpected flags ${flags.toString(16)}`,
              this.#apBody);
-        this.setAssociatedPath(sah, '', 0);
+        this.setClientPath(sah, '', 0);
         return '';
       }
-
       const fileDigest = new Uint32Array(HEADER_DIGEST_SIZE / 4);
       sah.read(fileDigest, {at: HEADER_OFFSET_DIGEST});
       const compDigest = this.computeDigest(this.#apBody, flags);
-      //warn("getAssociatedPath() flags",'0x'+flags.toString(16), "compDigest", compDigest);
+      //warn("getClientPath() flags",'0x'+flags.toString(16), "compDigest", compDigest);
       if(fileDigest.every((v,i) => v===compDigest[i])){
         // Valid digest
-        const pathBytes = this.#apBody.findIndex((v)=>0===v);
-        if(0===pathBytes){
+        if(0===nPath){
           // This file is unassociated, so truncate it to avoid
           // leaving stale db data laying around.
           sah.truncate(HEADER_OFFSET_DATA);
         }
-        //warn("getAssociatedPath() flags",'0x'+flags.toString(16), "compDigest", compDigest,"pathBytes",pathBytes);
-        return pathBytes
-          ? textDecoder.decode(this.#apBody.subarray(0,pathBytes))
+        //warn("getClientPath() flags",'0x'+flags.toString(16), "compDigest", compDigest,"nPath",nPath);
+        return nPath
+          ? textDecoder.decode(this.#apBody.subarray(0, nPath))
           : '';
       }else{
         // Invalid digest
         warn('Disassociating file with bad digest.');
-        this.setAssociatedPath(sah, '', 0);
+        this.setClientPath(sah, '', 0);
         return '';
       }
     }
@@ -20691,7 +21006,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
        is falsy. This function removes the mapping of that name to an
        SAH.
     */
-    setAssociatedPath(sah, path, flags, nameToRemove){
+    setClientPath(sah, path, flags, nameToRemove){
       const enc = textEncoder.encodeInto(path, this.#apBody);
       if(HEADER_MAX_PATH_SIZE <= enc.written + 1/*NUL byte*/){
         toss("Path too long:",path);
@@ -20706,7 +21021,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
       this.#apBody.fill(0, enc.written, HEADER_MAX_PATH_SIZE);
       this.#dvBody.setUint32(HEADER_OFFSET_FLAGS, flags);
       const digest = this.computeDigest(this.#apBody, flags);
-      //console.warn("setAssociatedPath(",path,") digest",digest);
+      //console.warn("setClientPath(",path,") digest",digest);
       sah.write(this.#apBody, {at: 0});
       if(nameToRemove){
         /* The placement of this is very specific: between the above
@@ -20808,7 +21123,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
     deletePath(path) {
       const sah = this.#mapFilenameToSAH.get(path);
       if(sah) {
-        this.setAssociatedPath(sah, '', 0, path);
+        this.setClientPath(sah, '', 0, path);
       }
       return !!sah;
     }
@@ -21033,10 +21348,10 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
           at: HEADER_OFFSET_DATA + 18
         }/*force db out of WAL mode*/);
       }catch(e){
-        this.setAssociatedPath(sah, '', 0);
+        this.setClientPath(sah, '', 0);
         throw e;
       }
-      this.setAssociatedPath(sah, name, capi.SQLITE_OPEN_MAIN_DB);
+      this.setClientPath(sah, name, capi.SQLITE_OPEN_MAIN_DB);
       return nWrote;
     }
 
@@ -21051,7 +21366,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
       const n = bytes.byteLength;
       const nWrote = sah.write(bytes, {at: HEADER_OFFSET_DATA});
       if(nWrote != n){
-        this.setAssociatedPath(sah, '', 0);
+        this.setClientPath(sah, '', 0);
         toss("Expected to write "+n+" bytes but wrote "+nWrote+".");
       }else{
         sah.truncate(HEADER_OFFSET_DATA + n
@@ -21059,7 +21374,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
                         existing file with a shorter one. */);
         sah.write(new Uint8Array([1,1]), {at: HEADER_OFFSET_DATA+18}
                    /* force db out of WAL mode */);
-        this.setAssociatedPath(sah, name, capi.SQLITE_OPEN_MAIN_DB);
+        this.setClientPath(sah, name, capi.SQLITE_OPEN_MAIN_DB);
       }
       return nWrote;
     }
@@ -21597,7 +21912,7 @@ globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   deliverable somewhere after opfs-common-shared.c-pp.js.
 */
 'use strict';
-globalThis.sqlite3ApiBootstrap.initializers.push(function(sqlite3){
+sqlite3ApiBootstrap.initializers.push(function(sqlite3){
   if( !sqlite3.opfs || sqlite3.config.disable?.vfs?.['opfs-wl'] ){
     return;
   }
@@ -21688,7 +22003,7 @@ const installOpfsWlVfs = async function(options){
     }
   })/*bindVfs()*/;
 }/*installOpfsWlVfs()*/;
-globalThis.sqlite3ApiBootstrap.initializersAsync.push(async (sqlite3)=>{
+sqlite3ApiBootstrap.initializersAsync.push(async (sqlite3)=>{
   return installOpfsWlVfs().catch((e)=>{
     sqlite3.config.warn("Ignoring inability to install the",vfsName,"sqlite3_vfs:",e);
   });
@@ -21721,8 +22036,9 @@ globalThis.sqlite3ApiBootstrap.initializersAsync.push(async (sqlite3)=>{
   pre-js.c-pp.js and friends.
 */
 try{
-  /* We are in the closing block of Module.runSQLite3PostLoadInit(), so
-     its arguments are visible here. */
+  /* We are in the closing block of Module.runSQLite3PostLoadInit(),
+     so its arguments are visible here, as are symbols exposed by the
+     amalgamated library JS files. */
 
   /* Config options for sqlite3ApiBootstrap(). */
   const bootstrapConfig = Object.assign(
@@ -21738,8 +22054,8 @@ try{
            ? EmscriptenModule['wasmExports']
            : EmscriptenModule['asm']/* emscripten <=3.1.43 */)
     },
-    globalThis.sqlite3ApiBootstrap.defaultConfig, // default options
-    globalThis.sqlite3ApiConfig || {} // optional client-provided options
+    sqlite3ApiBootstrap.defaultConfig, // default options
+    globalThis.sqlite3ApiConfig ?? {} // optional client-provided options
   );
 
   sqlite3InitScriptInfo.debugModule("Bootstrapping lib config", bootstrapConfig);
@@ -21750,14 +22066,13 @@ try{
      but that's not practical in this particular build constellation
      because of the order everything happens in.  Clients may either
      define globalThis.sqlite3ApiConfig or modify
-     globalThis.sqlite3ApiBootstrap.defaultConfig to tweak the default
+     sqlite3ApiBootstrap.defaultConfig to tweak the default
      configuration used by a no-args call to sqlite3ApiBootstrap(),
      but must have first loaded their WASM module in order to be able
      to provide the necessary configuration state.
   */
-  const p = globalThis.sqlite3ApiBootstrap(bootstrapConfig);
-  delete globalThis.sqlite3ApiBootstrap;
-  return p /* the eventual result of globalThis.sqlite3InitModule() */;
+  const p = sqlite3ApiBootstrap(bootstrapConfig);
+  return p /* the eventual result of sqlite3InitModule() */;
 }catch(e){
   console.error("sqlite3ApiBootstrap() error:",e);
   throw e;
@@ -21782,20 +22097,7 @@ try{
 // Export using a UMD style export, or ES6 exports if selected
 
 
-/* ^^^^ ACHTUNG: blank line at the start is necessary because
-   Emscripten will not add a newline in some cases and we need
-   a blank line for a sed-based kludge for the ES6 build.
-
-   extern-post-js.js must be appended to the resulting sqlite3.js
-   file. It gets its name from being used as the value for the
-   --extern-post-js=... Emscripten flag. This code, unlike most of the
-   associated JS code, runs outside of the Emscripten-generated module
-   init scope, in the current global scope.
-
-   At the time this is run, the global-scope sqlite3InitModule
-   function will have just been defined.
-*/
-const toExportForESM =
+export default
 (function(){
   //console.warn("this is extern-post-js");
   /**
@@ -21810,6 +22112,8 @@ const toExportForESM =
     throw new Error("Expecting sqlite3InitModule to be defined by the Emscripten build.");
   }
   /**
+     sIMS => sqlite3InitModuleState
+
      We need to add some state which our custom Module.locateFile()
      can see, but an Emscripten limitation currently prevents us from
      attaching it to the sqlite3InitModule function object:
@@ -21819,14 +22123,17 @@ const toExportForESM =
      The only(?) current workaround is to temporarily stash this state
      into the global scope and delete it when sqlite3InitModule()
      is called.
+
+     This state is consumed by pre-js.c-pp.js. That file lives above
+     this one in the built JS module but it's executed after this one.
   */
-  const sIMS = globalThis.sqlite3InitModuleState = Object.assign(Object.create(null),{
+  const sIMS = Object.assign(Object.create(null),{
     moduleScript: globalThis?.document?.currentScript,
     isWorker: ('undefined' !== typeof WorkerGlobalScope),
-    location: globalThis.location,
+    location: globalThis?.location,
     urlParams:  globalThis?.location?.href
       ? new URL(globalThis.location.href).searchParams
-      : new URLSearchParams(),
+      : new URLSearchParams()
     /*
       It is literally impossible to reliably get the name of _this_ script
       at runtime, so impossible to reliably derive X.wasm from script name
@@ -21835,27 +22142,75 @@ const toExportForESM =
       the name of the WASM file which our custom instantiateWasm() should to
       load. The build process populates this.
 
+      The primary reason we do this is because disparate builds
+      usually result in different JS but identical WASM files. To
+      avoid, e.g., that we have to ship two separate WASM files for
+      vanilla and ESM builds, we rewire all builds which produce
+      identical binaries to use a single copy of those binaries.
+
       Module.instantiateWasm() is found in pre-js.c-pp.js.
     */
-    wasmFilename: 'sqlite3.wasm' /* replaced by the build process */
+    ,wasmFilename: 'sqlite3.wasm' /* replaced by the build process */
   });
   sIMS.debugModule =
     sIMS.urlParams.has('sqlite3.debugModule')
     ? (...args)=>console.warn('sqlite3.debugModule:',...args)
     : ()=>{};
 
-  if(sIMS.urlParams.has('sqlite3.dir')){
-    sIMS.sqlite3Dir = sIMS.urlParams.get('sqlite3.dir') +'/';
-  }else if(sIMS.moduleScript){
+  /**
+     Fetches sIMS.urlParams.get(key). If that looks like it might
+     be a remote path value then null is returned and a console
+     warning may be emitted. If it looks like it's a local path,
+     it is returned.
+
+     [bugs:74f052d3d2]: do not allow URL arguments which are used for
+     determining file locations to be anything other than what appears
+     to be a local file reference. That is the only documented use for
+     these args and allowing URLs as values leads to chaos. This is
+     believed to resolve that report but is also considered a stopgap
+     measure. Potential TODO is only allow query parameters from the
+     same origin as this script.
+  */
+  const getPathArgument = (key)=>{
+    const s = sIMS.urlParams.get(key);
+    //console.warn("sIMS.getPathArgument(",key,")",s);
+    if( !s ) return s;
+    if( s.indexOf(':')>=0 || s.indexOf('//')>=0 ){
+      console.warn(
+        "Rejecting path string",key,"because it does not look",
+        "like a local path:",s
+      );
+      return null;
+    }
+    return s;
+  };
+  if( sIMS.urlParams.has('sqlite3.dir') ){
+    const s = getPathArgument('sqlite3.dir');
+    if( s ){
+      sIMS.sqlite3Dir = s + (s[s.length-1]==='/' ? '' : '/');
+    }
+  }else if( sIMS.moduleScript?.src ){
     const li = sIMS.moduleScript.src.split('/');
     li.pop();
     sIMS.sqlite3Dir = li.join('/') + '/';
   }
 
-  const sIM = globalThis.sqlite3InitModule = function ff(...args){
+  /** The replacement for Emscripten-generated sqlite3InitModule(). */
+  const sIM = sqlite3InitModule = function ff(...args){
     //console.warn("Using replaced sqlite3InitModule()",globalThis.location);
-    sIMS.emscriptenLocateFile = args[0]?.locateFile /* see pre-js.c-pp.js [tag:locateFile] */;
-    sIMS.emscriptenInstantiateWasm = args[0]?.instantiateWasm /* see pre-js.c-pp.js [tag:locateFile] */;
+    /**
+       Conventionally, the first argument to an Emscripten-generated
+       module init function is a client-provided Object which
+       overrides the Module object. Because we cannot offer any sort
+       of API stability for that, we have historically not processed
+       or accepted any arguments. As a "back door" we offer selective
+       overrides of some options, as handled below via args[0].
+
+       See pre-js.c-pp.js [tag:locateFile] for the details and a link
+       to the relevant discussion.
+    */
+    sIMS.emscriptenLocateFile = args[0]?.locateFile;
+    sIMS.emscriptenInstantiateWasm = args[0]?.instantiateWasm;
     return originalInit(...args).then((EmscriptenModule)=>{
       sIMS.debugModule("sqlite3InitModule() sIMS =",sIMS);
       sIMS.debugModule("sqlite3InitModule() EmscriptenModule =",EmscriptenModule);
@@ -21865,23 +22220,18 @@ const toExportForESM =
         !!ff.__isUnderTest
       );
       sIMS.debugModule("sqlite3InitModule() sqlite3 =",s);
-      //const rv = s.asyncPostInit();
-      //delete s.asyncPostInit;
       return s;
     }).catch((e)=>{
       console.error("Exception loading sqlite3 module:",e);
       throw e;
     });
   };
-  sIM.ready = originalInit.ready;
-
-  if(sIMS.moduleScript){
-    let src = sIMS.moduleScript.src.split('/');
+  if( sIMS.moduleScript?.src ){
+    /* Record this script's directory part */
+    const src = sIMS.moduleScript.src.split('/');
     src.pop();
     sIMS.scriptDir = src.join('/') + '/';
   }
   sIMS.debugModule('extern-post-js.c-pp.js sqlite3InitModuleState =',sIMS);
   return sIM;
 })();
-sqlite3InitModule = toExportForESM;
-export default sqlite3InitModule;

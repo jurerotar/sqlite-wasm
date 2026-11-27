@@ -19,7 +19,8 @@
   Worker API does.
 
   In non-ESM builds this file necessarily exposes one global symbol,
-  but clients may freely `delete` that symbol after calling it.
+  but clients may freely `delete` that symbol after calling it (and
+  are encouraged to do so).
 */
 /**
    Configures an sqlite3 Worker API #1 Worker such that it can be
@@ -134,7 +135,7 @@
      developed. For use as an ESM module, see the "v2" interface later
      on in this file.
 */
-globalThis.sqlite3Worker1Promiser = function callee(config = callee.defaultConfig){
+const sqlite3Worker1Promiser = function callee(config = callee.defaultConfig){
   // Inspired by: https://stackoverflow.com/a/52439530
   if(1===arguments.length && 'function'===typeof arguments[0]){
     const f = config;
@@ -249,7 +250,7 @@ globalThis.sqlite3Worker1Promiser = function callee(config = callee.defaultConfi
   };
 }/*sqlite3Worker1Promiser()*/;
 
-globalThis.sqlite3Worker1Promiser.defaultConfig = {
+sqlite3Worker1Promiser.defaultConfig = {
   worker: function(){
     return new Worker(new URL("sqlite3-worker1.mjs", import.meta.url),{
       type: 'module'
@@ -262,7 +263,7 @@ globalThis.sqlite3Worker1Promiser.defaultConfig = {
 /**
    sqlite3Worker1Promiser.v2(), added in 3.46, works identically to
    sqlite3Worker1Promiser() except that it returns a Promise instead
-   of relying an an onready callback in the config object. The Promise
+   of relying on an onready callback in the config object. The Promise
    resolves to the same factory function which
    sqlite3Worker1Promiser() returns.
 
@@ -271,7 +272,7 @@ globalThis.sqlite3Worker1Promiser.defaultConfig = {
    after calling the original function and will reject if that
    function throws.
 */
-globalThis.sqlite3Worker1Promiser.v2 = function callee(config = callee.defaultConfig){
+sqlite3Worker1Promiser.v2 = function callee(config = callee.defaultConfig){
   let oldFunc;
   if( 'function' == typeof config ){
     oldFunc = config;
@@ -295,19 +296,15 @@ globalThis.sqlite3Worker1Promiser.v2 = function callee(config = callee.defaultCo
     promiseProxy.reject = reject;
   });
   try{
-    this.original(config);
+    sqlite3Worker1Promiser(config);
   }catch(e){
     promiseProxy.reject(e);
   }
   return p;
-}.bind({
-   /* We do this because clients are recommended to delete
-      globalThis.sqlite3Worker1Promiser. */
-  original: sqlite3Worker1Promiser
-});
+};
 
-globalThis.sqlite3Worker1Promiser.v2.defaultConfig =
-  globalThis.sqlite3Worker1Promiser.defaultConfig;
+sqlite3Worker1Promiser.v2.defaultConfig =
+  sqlite3Worker1Promiser.defaultConfig;
 
 /**
   When built as a module, we export sqlite3Worker1Promiser.v2()
@@ -317,4 +314,3 @@ globalThis.sqlite3Worker1Promiser.v2.defaultConfig =
   incompatibility.
 */
 export default sqlite3Worker1Promiser.v2;
-delete globalThis.sqlite3Worker1Promiser;
